@@ -107,6 +107,7 @@ public class Master_Instance : MonoBehaviour {
 	private void Instantiate_Enemy(){
 		/*Enemy prefab selection ===========================================*/
 		GameObject Enemy = Instantiate(Resources.Load("Enemies/" + currentWave[indexcurrentWave].GetComponent<waves>().enemyList[indexcurrentenemy]), new Vector3(spawner.transform.position.x+ Random.Range(-seed, seed),spawner.transform.position.y+ Random.Range(-seed, seed),spawner.transform.position.z), Quaternion.identity)as GameObject;
+		// Debug.Log(Enemy);
 		Enemy.transform.SetParent(this.gameObject.transform);
 		PathFollower EnemyPathProperties = Enemy.GetComponent<PathFollower>();
 		Enemies_Controller EnemyPropierties = Enemy.GetComponent<Enemies_Controller>();
