@@ -73,9 +73,11 @@ public class Waves_Creator_Controller : MonoBehaviour {
 			end=true;
 			}	        //Finish the game, you win
 		if(end==true&&sw==false){	
-			nextLevel.SetActive(true);							
+			gameOver.SetActive(true);							
 			sw=true;
-			Invoke("FinishScene",3f);									//Load finish event
+			GameObject.Find("Crossfade").GetComponent<Animator>().SetBool("out",true);
+		Invoke("CrossfadeDelayed",2);
+		Invoke("LoadMenu",3);				
 		}
 	}
 	/// <summary>
@@ -154,6 +156,11 @@ public class Waves_Creator_Controller : MonoBehaviour {
 	public void LoadNextLevel()
 {
     SceneManager.LoadScene("Level_2");
+}
+
+	public void LoadMenu()
+{
+    SceneManager.LoadScene("Menu");
 }
 
 }
