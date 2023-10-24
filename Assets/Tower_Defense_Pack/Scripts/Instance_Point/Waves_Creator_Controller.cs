@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FThLib;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// It is used to read the Wave Prefab and it is attached to Instance_Point gameobject
@@ -27,6 +28,9 @@ public class Waves_Creator_Controller : MonoBehaviour {
 	private Text waves;
     private AudioSource audio;
     private AudioClip start;
+	public GameObject gameOver;
+	public GameObject nextLevel;
+
     /// <summary>
     /// Read wave prefab
     /// </summary>
@@ -64,8 +68,12 @@ public class Waves_Creator_Controller : MonoBehaviour {
 			}
 			if(wavesIndex<0){playing=false;}
 		}
-		if(wavesIndex<0&&playing==false&&end==false&&GameObject.FindGameObjectsWithTag("Respawn").Length==0){end=true;}	        //Finish the game, you win
-		if(end==true&&sw==false){								
+		if(wavesIndex<0&&playing==false&&end==false&&GameObject.FindGameObjectsWithTag("Respawn").Length==0){
+			nextLevel.SetActive(true);
+			end=true;
+			}	        //Finish the game, you win
+		if(end==true&&sw==false){	
+			nextLevel.SetActive(true);							
 			sw=true;
 			Invoke("FinishScene",3f);									//Load finish event
 		}
@@ -131,7 +139,9 @@ public class Waves_Creator_Controller : MonoBehaviour {
 			GetComponent<Master_Instance>().Finish=true;
 			GameObject.Find("UI_Exit").GetComponent<Canvas>().enabled=true;
 			GameObject[] enemies_ = GameObject.FindGameObjectsWithTag("Respawn");
-			if(enemies_.Length>0){															                                            //Destroy all enemies
+			if(enemies_.Length>0){		
+				gameOver.SetActive(true);
+				Invoke("LoadMenuScene", 3f);									                                            //Destroy all enemies
 				for(int i=0;i<enemies_.Length;i++){
 					Destroy(enemies_[i]);
 				}
@@ -140,4 +150,10 @@ public class Waves_Creator_Controller : MonoBehaviour {
 			sw=false;
 		}
 	}
+
+	public void LoadNextLevel()
+{
+    SceneManager.LoadScene("Level_2");
+}
+
 }
