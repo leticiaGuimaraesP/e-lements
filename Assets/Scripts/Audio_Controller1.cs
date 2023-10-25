@@ -6,7 +6,8 @@ using UnityEngine;
 /// It is used to manage the sounds and play the scene song
 /// Also it plays sound when finish
 /// </summary>
-public class Audio_Controller1 : MonoBehaviour {
+public class Audio_Controller1 : MonoBehaviour
+{
     //public AudioClip SceneMusic;
     public AudioClip[] Physic_attack;                       //Sword attack
     public AudioClip[] Knights_Dying;                       //Knights dying
@@ -23,22 +24,25 @@ public class Audio_Controller1 : MonoBehaviour {
     public float effects_volume;
     private GameObject UI_Exit;
     private AudioSource audio;
-	// Use this for initialization
-	void Start () {
-        if (PlayerPrefs.HasKey("sound"))
-        {
-            switch (PlayerPrefs.GetInt("sound"))
-            {
-                case 0: AudioListener.volume = 0.0f;break;
-                case 1: AudioListener.volume = 1.0f;break;
-            }
-        }
+    // Use this for initialization
+    void Start()
+    {
         audio = GetComponent<AudioSource>();
+        if (!PlayerPrefs.HasKey("audio-volume"))
+        {
+            PlayerPrefs.SetFloat("audio-volume", 5);
+            Load();
+        }
+        else
+        {
+            Load();
+        }
         UI_Exit = GameObject.Find("UI_Exit");
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         if (GameObject.Find("UI_Exit"))
         {
             if (UI_Exit.GetComponent<Canvas>().enabled == true && audio.clip != exit)
@@ -49,9 +53,20 @@ public class Audio_Controller1 : MonoBehaviour {
                 Invoke("DelayExitAudio", 0.5f);
             }
         }
-	}
+    }
 
-    public void SoundControl() {
+    private void Load()
+    {
+        audio.volume = PlayerPrefs.GetFloat("audio-volume");
+    }
+
+    private void Save()
+    {
+        PlayerPrefs.SetFloat("audio-volume", audio.volume);
+    }
+
+    public void SoundControl()
+    {
         if (PlayerPrefs.HasKey("sound"))
         {
             switch (PlayerPrefs.GetInt("sound"))
@@ -67,7 +82,8 @@ public class Audio_Controller1 : MonoBehaviour {
         }
     }
 
-    void DelayExitAudio() {
+    void DelayExitAudio()
+    {
         audio.Play();
     }
 }
