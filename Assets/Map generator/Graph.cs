@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Graph : MonoBehaviour
 {
     [SerializeField] private Sprite emptyTile, pathTile, entryTile;
     [SerializeField] public Node tileNode;
 
-    [SerializeField] public GameObject tilePrefab, Instance_point, tower, pointPrefab, Spawner;
+    [SerializeField] public GameObject tilePrefab, Instance_point, tower, pointPrefab, Spawner, Destroyer;
 
     [SerializeField] private GameObject tree, flower, grass, grass2;
 
@@ -91,6 +92,8 @@ public class Graph : MonoBehaviour
 
         Spawner.SetActive(true);
         GameObject spawner = Instantiate(Spawner, new Vector2(source1.x * 2, (source1.y) - 1), Quaternion.identity);
+
+        GameObject destroyer = Instantiate(Destroyer, new Vector2(destination2.x * 2, -(destination2.y)*2 - 1), Quaternion.identity);
     }
 
     List<int> GenerateUniqueRandomNumbers(int min, int max, int count)

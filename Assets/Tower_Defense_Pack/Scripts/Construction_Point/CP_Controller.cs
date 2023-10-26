@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using FThLib;
+using UnityEngine.UI;
 
 /// <summary>
 /// It is the controller of the construction points
@@ -10,7 +11,13 @@ public class CP_Controller : MonoBehaviour {
 	private bool mouseover=false;
 	public bool clicked =false;
 
-[SerializeField] private Sprite tower;
+	 [SerializeField] public GameObject buttonPrefab;
+
+	 private GameObject buttonInst;
+
+	 private bool buttonClicked = false;
+
+[SerializeField] private Sprite tower, btTower;
     
     //Show hand
 	// void OnMouseOver(){ 
@@ -46,19 +53,34 @@ public class CP_Controller : MonoBehaviour {
 	// }
 
 	private void OnMouseDown() {
-		GetComponent<CircleCollider2D>().enabled=true;
-		StartCoroutine(SpawnCharacters());
-		// gameObject.GetComponent<SpriteRenderer>().sprite = tower;
-		// gameObject.GetComponent<SpriteRenderer>().sortingOrder =10;
+
+		if(!buttonClicked){
+			buttonInst = Instantiate(buttonPrefab, new Vector2(0f,0f), Quaternion.identity);
+        Button bt = buttonInst.GetComponentInChildren<Button>();
+		bt.onClick.AddListener(() => ButtonClick());
+		Image buttonImage = bt.GetComponent<Image>();
+		buttonImage.sprite = btTower;
+
+		Vector2 buttonPosition = this.gameObject.transform.position+ new Vector3(0f, 2f, 0f);// Ajuste a posição vertical conforme necessário
+
+		Vector3 screenPosition = Camera.main.WorldToScreenPoint(buttonPosition);
+
+        // Obtenha o RectTransform do botão e defina sua posição
+        bt.transform.position = screenPosition;
+
+		buttonClicked = true;
+		}
 	}
 
-	 IEnumerator SpawnCharacters()
+	 public void SpawnTower()
     {
-		
 		gameObject.GetComponent<SpriteRenderer>().sprite = tower;
 		gameObject.GetComponent<SpriteRenderer>().sortingOrder =10;
-		//GetComponent<CircleCollider2D>().enabled=false;
-      
-        yield return new WaitForSeconds(2.2f); // Wait for 5 seconds before the next spawn
+		Destroy(buttonInst);
 	}
+
+	void ButtonClick()
+    {
+		SpawnTower();
+    }
 }

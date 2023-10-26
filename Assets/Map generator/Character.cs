@@ -49,4 +49,9 @@ public class Character : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+     void OnMouseDown()
+    {
+         Destroy(gameObject);
+    }
 }
