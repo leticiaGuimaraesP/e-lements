@@ -9,37 +9,56 @@ using FThLib;
 public class CP_Controller : MonoBehaviour {
 	private bool mouseover=false;
 	public bool clicked =false;
+
+[SerializeField] private Sprite tower;
     
     //Show hand
-	void OnMouseOver(){ 
-		if(!GameObject.Find("hand")){master.showHand (true);}
-		mouseover=true;
-	}
-	//Hid hand
-	void OnMouseExit(){
-		if(GameObject.Find("hand")){master.showHand (false);}
-		mouseover=false;
-	}
-	/// <summary>
-    /// Normalize the Z position relative to the Y position, and set the layer and name
-    /// </summary>
-	void Start () {
-		this.transform.position = master.setThisZ(this.transform.position,0.02f);
-		this.gameObject.name="CP";
-		master.setLayer("interface",this.gameObject);
-	}
+	// void OnMouseOver(){ 
+	// 	//if(!GameObject.Find("hand")){master.showHand (true);}
+	// 	mouseover=true;
+	// }
+	// //Hid hand
+	// void OnMouseExit(){
+	// 	//if(GameObject.Find("hand")){master.showHand (false);}
+	// 	mouseover=false;
+	// }
+	// /// <summary>
+    // /// Normalize the Z position relative to the Y position, and set the layer and name
+    // /// </summary>
+	// void Start () {
+	// 	//this.transform.position = master.setThisZ(this.transform.position,0.02f);
+	// 	this.gameObject.name="CP";
+	// 	master.setLayer("interface",this.gameObject);
+	// }
 	
-	/// <summary>
-    /// It shows the Construction Point Interface on the Construction point clicked position
-    /// </summary>
-	void Update () {
-		if(!master.isFinish()){                                                                                                             //Game is not finished
-			if(master.getChildFrom("Interface",this.gameObject)==null&&clicked==false){GetComponent<CircleCollider2D>().enabled=true;}
-			if (Input.GetMouseButtonDown(0)&&mouseover==true){
-                GameObject.Find("UI").GetComponent<AudioSource>().Play();
-                master.showInterface(this.gameObject.name,this.gameObject,this.gameObject.transform);                                       //Show CP interface
-				GetComponent<CircleCollider2D>().enabled=false;
-			}
-		}
+	// /// <summary>
+    // /// It shows the Construction Point Interface on the Construction point clicked position
+    // /// </summary>
+	// void Update () {
+	// 	if(!master.isFinish()){                                                                                                             //Game is not finished
+	// 		if(master.getChildFrom("Interface",this.gameObject)==null&&clicked==false){GetComponent<CircleCollider2D>().enabled=true;}
+	// 		if (Input.GetMouseButtonDown(0)&&mouseover==true){
+    //             GameObject.Find("UI").GetComponent<AudioSource>().Play();
+    //             master.showInterface(this.gameObject.name,this.gameObject,this.gameObject.transform);                                       //Show CP interface
+	// 			GetComponent<CircleCollider2D>().enabled=false;
+	// 		}
+	// 	}
+	// }
+
+	private void OnMouseDown() {
+		GetComponent<CircleCollider2D>().enabled=true;
+		StartCoroutine(SpawnCharacters());
+		// gameObject.GetComponent<SpriteRenderer>().sprite = tower;
+		// gameObject.GetComponent<SpriteRenderer>().sortingOrder =10;
+	}
+
+	 IEnumerator SpawnCharacters()
+    {
+		
+		gameObject.GetComponent<SpriteRenderer>().sprite = tower;
+		gameObject.GetComponent<SpriteRenderer>().sortingOrder =10;
+		//GetComponent<CircleCollider2D>().enabled=false;
+      
+        yield return new WaitForSeconds(2.2f); // Wait for 5 seconds before the next spawn
 	}
 }
