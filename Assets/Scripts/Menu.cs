@@ -14,17 +14,30 @@ public GameObject tutorialPage1;
 public GameObject tutorialPage2;
 public GameObject tutorialPage3;
 
-   public void tutorial() {
+//    public void tutorial() {
+//        SceneManager.LoadSceneAsync("Tutorial");
+//     }
+
+    public void loadTutorial() {
        SceneManager.LoadSceneAsync("Tutorial");
     }
 
-    public void playGame() {
-       SceneManager.LoadSceneAsync("Level_1");
+    public void loadSetting() {
+       SceneManager.LoadSceneAsync("Setting2");
     }
 
-    public void openSettings() {
-       SceneManager.LoadSceneAsync("Settings");
+    public void loadMenu() {
+       SceneManager.LoadSceneAsync("Menu");
     }
+
+
+    public void playGame() {
+       SceneManager.LoadSceneAsync("Level_2");
+    }
+
+    // public void openSettings() {
+    //    SceneManager.LoadSceneAsync("Settings2");
+    // }
 
     public void quitGame() {
        SceneManager.LoadSceneAsync("MainMenu");
@@ -57,7 +70,7 @@ public void nextPageTutorial() {
 
     if (currentPage > 3) {
         currentPage = 1;
-        SceneManager.LoadScene("Level_1");
+        SceneManager.LoadScene("Level_2");
     } else {
     switch (currentPage) {
         case 1:
