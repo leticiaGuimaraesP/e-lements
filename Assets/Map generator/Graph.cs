@@ -47,47 +47,40 @@ public class Graph : MonoBehaviour
         sortSourceAndDestination();
         sortQVertex();
 
-
-
         List<Node> path1 = new List<Node>();
         List<Node> path2 = new List<Node>();
         List<Node> path3 = new List<Node>();
         List<Node> path4 = new List<Node>();
 
         //Busca do Q1
-        //Busca do Q1
-        path1.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[0]));
-        path2.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[1]));
+        path1.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[1]));
+        path2.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[0]));
 
         //Busca do Q2
         path3.AddRange(BreadthFirstPaths.BFS(source2, requiredVertices, requiredVertices[2]));
         path4.AddRange(BreadthFirstPaths.BFS(source2, requiredVertices, requiredVertices[3]));
 
         //Busca do Q3
-        path3.AddRange(BreadthFirstPaths.BFS(requiredVertices[2], requiredVertices, requiredVertices[4]));
-        path4.AddRange(BreadthFirstPaths.BFS(requiredVertices[3], requiredVertices, requiredVertices[5]));
+        path3.AddRange(BreadthFirstPaths.BFS(requiredVertices[2], requiredVertices, requiredVertices[5]));
+        path4.AddRange(BreadthFirstPaths.BFS(requiredVertices[3], requiredVertices, requiredVertices[4]));
 
         //Busca ao Destino 1
-        path3.AddRange(BreadthFirstPaths.BFS(requiredVertices[4], requiredVertices, destination1));
-        path4.AddRange(BreadthFirstPaths.BFS(requiredVertices[5], requiredVertices, destination1));
+        path3.AddRange(BreadthFirstPaths.BFS(requiredVertices[5], requiredVertices, destination1));
+        path4.AddRange(BreadthFirstPaths.BFS(requiredVertices[4], requiredVertices, destination1));
 
         //Busca do Q4
-        path1.AddRange(BreadthFirstPaths.BFS(requiredVertices[0], requiredVertices, requiredVertices[6]));
-        path2.AddRange(BreadthFirstPaths.BFS(requiredVertices[1], requiredVertices, requiredVertices[7]));
+        path1.AddRange(BreadthFirstPaths.BFS(requiredVertices[1], requiredVertices, requiredVertices[6]));
+        path2.AddRange(BreadthFirstPaths.BFS(requiredVertices[0], requiredVertices, requiredVertices[7]));
 
         //Busca ao Destino 2
         path1.AddRange(BreadthFirstPaths.BFS(requiredVertices[6], requiredVertices, destination2));
         path2.AddRange(BreadthFirstPaths.BFS(requiredVertices[7], requiredVertices, destination2));
 
 
-        List<Node> possibleTowers = findPossibleTowerPlaces();
+        List<Node> possibleTowers = findPossibleTowerPlaces(path1);
 
         printMap();
 
-        // foreach (var item in path)
-        // {
-        //     printPath(item);
-        // }
         printPath(path1, 0);
         printPath(path2, 1);
         printPath(path3, 2);
@@ -256,22 +249,23 @@ public class Graph : MonoBehaviour
     public void sortSourceAndDestination()
     {
         int x;
-        x = Random.Range(0, matrix.n);
+        x = Random.Range(0, matrix.n - 7);
         source1 = Q1[x];
 
-        x = Random.Range(0, matrix.n);
+        x = Random.Range(matrix.n - 5, matrix.n);
         source2 = Q2[x];
 
-        x = Random.Range(Q3.Count - matrix.n, Q3.Count - 1);
+        x = Random.Range(Q3.Count - (matrix.n - 1), Q3.Count - 6);
         destination1 = Q3[x];
 
-        x = Random.Range(Q4.Count - matrix.n, Q4.Count - 1);
+        x = Random.Range(Q4.Count - (matrix.n - 6), Q4.Count - 1);
         destination2 = Q4[x];
 
         source1.isPath = source2.isPath = destination1.isPath = destination2.isPath = true;
         source1.isEntry = source2.isEntry = destination1.isEntry = destination2.isEntry = true;
         destination1.isLast = destination2.isLast = true;
     }
+
     public void sortQVertex()
     {
         int pos;
@@ -279,54 +273,30 @@ public class Graph : MonoBehaviour
         int temp;
 
         //Sorteio dos vértices Q1
-        offset = Random.Range(2, 5);
+        offset = Random.Range(9, 11);
         temp = offset * 12;
+        offset = Random.Range(3, 6);
         pos = offset + temp;
         this.requiredVertices.Add(Q1[pos]);
 
-        offset = Random.Range(8, 11);
+        offset = Random.Range(3, 6);
         temp = offset * 12;
+        offset = Random.Range(8, 11);
         pos = offset + temp;
-        if (!requiredVertices.Contains(Q1[pos]))
-        {
-            requiredVertices.Add(Q1[pos]);
-        }
-        else
-        {
-            offset = Random.Range(7, 11);
-            temp = offset * 12;
-            pos = offset + temp;
-            if (!requiredVertices.Contains(Q1[pos]))
-            {
-                requiredVertices.Add(Q1[pos]);
-            }
-        }
+        requiredVertices.Add(Q1[pos]);
+
 
         //Sorteio dos vértices Q2
-        offset = Random.Range(2, 5);
+        offset = Random.Range(3, 6);
         temp = offset * 12;
-        offset = Random.Range(7, 11);
         pos = offset + temp;
         this.requiredVertices.Add(Q2[pos]);
 
-        offset = Random.Range(8, 11);
+        offset = Random.Range(8, 12);
         temp = offset * 12;
-        offset = Random.Range(2, 5);
         pos = offset + temp;
-        if (!requiredVertices.Contains(Q2[pos]))
-        {
-            requiredVertices.Add(Q2[pos]);
-        }
-        else
-        {
-            offset = Random.Range(8, 11);
-            temp = offset * 12;
-            pos = offset + temp;
-            if (!requiredVertices.Contains(Q2[pos]))
-            {
-                requiredVertices.Add(Q2[pos]);
-            }
-        }
+        requiredVertices.Add(Q2[pos]);
+
 
         //Sorteio dos vértices Q3
         offset = Random.Range(2, 5);
@@ -337,46 +307,22 @@ public class Graph : MonoBehaviour
         offset = Random.Range(8, 10);
         temp = offset * 12;
         pos = offset + temp;
-        if (!requiredVertices.Contains(Q3[pos]))
-        {
-            requiredVertices.Add(Q3[pos]);
-        }
-        else
-        {
-            offset = Random.Range(8, 10);
-            temp = offset * 12;
-            pos = offset + temp;
-            if (!requiredVertices.Contains(Q3[pos]))
-            {
-                requiredVertices.Add(Q3[pos]);
-            }
-        }
+        requiredVertices.Add(Q3[pos]);
+        
 
         //Sorteio dos vértices Q4
-        offset = Random.Range(2, 5);
-        temp = offset * 12;
-        offset = Random.Range(7, 10);
-        pos = offset + temp;
-        this.requiredVertices.Add(Q4[pos]);
-
         offset = Random.Range(8, 10);
         temp = offset * 12;
         offset = Random.Range(2, 5);
         pos = offset + temp;
-        if (!requiredVertices.Contains(Q4[pos]))
-        {
-            requiredVertices.Add(Q4[pos]);
-        }
-        else
-        {
-            offset = Random.Range(8, 10);
-            temp = offset * 12;
-            pos = offset + temp;
-            if (!requiredVertices.Contains(Q4[pos]))
-            {
-                requiredVertices.Add(Q4[pos]);
-            }
-        }
+        requiredVertices.Add(Q4[pos]);
+
+        offset = Random.Range(2, 5);
+        temp = offset * 12;
+        offset = Random.Range(8, 10);
+        pos = offset + temp;
+        this.requiredVertices.Add(Q4[pos]);
+        
 
         foreach (Node n in requiredVertices)
         {
@@ -390,42 +336,67 @@ public class Graph : MonoBehaviour
 
     }
 
-    List<Node> findPossibleTowerPlaces()
+    List<Node> findPossibleTowerPlaces(List<Node> path)
     {
-        List<Node> possibleTowerPlace = new List<Node>();
-        Node tileToPrint = matrix.head.bottom;
-        for (int i = 0; i < radius; i++)
-        {
-            Node firstPosition = tileToPrint;
+        //List<Node> possibleTowerPlace = new List<Node>();
+        // Node tileToPrint = matrix.head.bottom;
+        // for (int i = 0; i < radius; i++)
+        // {
+        //     Node firstPosition = tileToPrint;
 
-            for (int j = 0; j < radius; j++)
-            {
-                if (tileToPrint.isPath == false && tileToPrint.left && tileToPrint.left.isPath)
-                {
-                    tileToPrint.canRecieveTower = true;
-                }
-                else if (tileToPrint.isPath == false && tileToPrint.right && tileToPrint.right.isPath)
-                {
-                    tileToPrint.canRecieveTower = true;
-                }
-                else if (tileToPrint.isPath == false && tileToPrint.top && tileToPrint.top.isPath)
-                {
-                    tileToPrint.canRecieveTower = true;
-                }
-                else if (tileToPrint.isPath == false && tileToPrint.bottom && tileToPrint.bottom.isPath)
-                {
-                    tileToPrint.canRecieveTower = true;
-                }
+        //     for (int j = 0; j < radius; j++)
+        //     {
+        //         if (tileToPrint.isPath == false && tileToPrint.left && tileToPrint.left.isPath)
+        //         {
+        //             tileToPrint.canRecieveTower = true;
+        //         }
+        //         else if (tileToPrint.isPath == false && tileToPrint.right && tileToPrint.right.isPath)
+        //         {
+        //             tileToPrint.canRecieveTower = true;
+        //         }
+        //         else if (tileToPrint.isPath == false && tileToPrint.top && tileToPrint.top.isPath)
+        //         {
+        //             tileToPrint.canRecieveTower = true;
+        //         }
+        //         else if (tileToPrint.isPath == false && tileToPrint.bottom && tileToPrint.bottom.isPath)
+        //         {
+        //             tileToPrint.canRecieveTower = true;
+        //         }
 
-                if (tileToPrint.canRecieveTower)
-                {
-                    possibleTowerPlace.Add(tileToPrint);
-                }
-                tileToPrint = tileToPrint.right;
-            }
-            tileToPrint = firstPosition.bottom;
-        }
+        //         if (tileToPrint.canRecieveTower)
+        //         {
+        //             possibleTowerPlace.Add(tileToPrint);
+        //         }
+        //         tileToPrint = tileToPrint.right;
+        //     }
+        //     tileToPrint = firstPosition.bottom;
+        // }
         //find all nodes adjecent to paths that are not paths
+
+        List<Node> possibleTowerPlace = new List<Node>();
+
+        foreach(Node n in path){
+            if(n != path[0]){
+                if(n.left && n.left.isPath == false){
+                    n.left.canRecieveTower = true;
+                    possibleTowerPlace.Add(n.left);
+                }
+                if(n.right && n.right.isPath == false){
+                    n.right.canRecieveTower = true;
+                    possibleTowerPlace.Add(n.right);
+                }
+                if(n.top && n.top.isPath == false){
+                    n.top.canRecieveTower = true;
+                    possibleTowerPlace.Add(n.top);
+                }
+                if(n.bottom && n.bottom.isPath == false){
+                    n.bottom.canRecieveTower = true;
+                    possibleTowerPlace.Add(n.bottom);
+                }
+            }
+        }
+    
+
         return possibleTowerPlace;
     }
 
@@ -436,7 +407,7 @@ public class Graph : MonoBehaviour
 
     void PutRandomTowers(List<Node> towerPlacements)
     {
-        List<int> randomNumbers = GenerateUniqueRandomNumbers(0, towerPlacements.Count, 12);
+        List<int> randomNumbers = GenerateUniqueRandomNumbers(0, towerPlacements.Count, 5);
 
         int index =0;
 

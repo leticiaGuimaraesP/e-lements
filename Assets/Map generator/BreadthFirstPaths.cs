@@ -61,14 +61,11 @@ public class BreadthFirstPaths : MonoBehaviour{
                 adjecent.Add(currentVertex.left);
             }
 
-            //Debug.Log(currentVertex.x + " - " + currentVertex.y);
-
             foreach (Node neighbor in adjecent) //Itera sobre os vizinhos do nó atual
             {
                 if(!requiredVertices.Contains(neighbor) || ((neighbor.x == destination.x) && (neighbor.y == destination.y))){ 
                     if (!visited.Contains(neighbor)) //Se o vizinho não foi visitado
                     {
-                        //Debug.Log("VIZINHO " + neighbor.x + " - " + neighbor.y);
                         if(!parent.ContainsKey(neighbor)){
                             parent.Add(neighbor, currentVertex); //filho, pai
                         }
@@ -79,7 +76,6 @@ public class BreadthFirstPaths : MonoBehaviour{
 
                         if ((neighbor.x == destination.x) && (neighbor.y == destination.y)) //Verifica se o vizinho é o destino
                         {
-                           // Debug.Log("CHEGUEI");
                             return true; //Existe caminho
                         }
                     }
