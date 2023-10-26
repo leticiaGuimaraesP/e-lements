@@ -95,7 +95,8 @@ public class Graph : MonoBehaviour
 
         PutRandomTowers(possibleTowers);
 
-        Instantiate(Spawner, new Vector2(source1.x * 2, (source1.y) - 1), Quaternion.identity);
+        Spawner.SetActive(true);
+        GameObject spawner = Instantiate(Spawner, new Vector2(source1.x * 2, (source1.y) - 1), Quaternion.identity);
     }
 
     List<int> GenerateUniqueRandomNumbers(int min, int max, int count)
