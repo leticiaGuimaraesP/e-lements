@@ -54,4 +54,9 @@ public class Character : MonoBehaviour
     {
          Destroy(gameObject);
     }
+
+    void OnDestroy()
+    {
+        graph.life -=1;
+    }
 }

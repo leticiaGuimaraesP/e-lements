@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 
 public class Graph : MonoBehaviour
@@ -25,6 +27,8 @@ public class Graph : MonoBehaviour
     private List<List<Node>> path = new List<List<Node>>();
 
     public List<List<Transform>> path_transform = new List<List<Transform>>();
+
+   [SerializeField] public int life;
 
 
     // start is called before the first frame update
@@ -340,6 +344,13 @@ public class Graph : MonoBehaviour
     void Update()
     {
 
+         if (life <= 0)
+        {
+            // A condição para Game Over foi atendida
+            // Carregue a cena de Game Over
+            SceneManager.LoadScene("Menu");
+        }
+        //Debug.Log(life);
     }
 
    List<Node> findPossibleTowerPlaces(List<Node> path)
