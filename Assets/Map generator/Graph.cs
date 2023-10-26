@@ -47,8 +47,6 @@ public class Graph : MonoBehaviour
         sortSourceAndDestination();
         sortQVertex();
 
-
-
         List<Node> path1 = new List<Node>();
         List<Node> path2 = new List<Node>();
         List<Node> path3 = new List<Node>();
