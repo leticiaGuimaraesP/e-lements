@@ -60,6 +60,8 @@ public class Master_Instance : MonoBehaviour {
 		}
 		/*============================== */
 		spawner = this.gameObject;
+		Vector3 cpPosition = new Vector3(1.0f, 1.0f, 0.0f);
+		GameObject CP = Instantiate(Resources.Load("CP/CP"), cpPosition, Quaternion.identity) as GameObject;
 	}
 	
 	// Update is called once per frame
@@ -233,4 +235,13 @@ public class Master_Instance : MonoBehaviour {
             SceneManager.LoadScene("Example_Scene3");
 		}
 	}
+
+
+	/// <param name="pos">position</param>
+		private static void Instantiate_CP(Transform pos){
+			Vector3 cpos = pos.position;
+			cpos.y = cpos.y - 0.1f;
+			GameObject CP = Instantiate(Resources.Load("CP/CP"), cpos, Quaternion.identity)as GameObject;
+			CP.name="CP";
+		}
 }
