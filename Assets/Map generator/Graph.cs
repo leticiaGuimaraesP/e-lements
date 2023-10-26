@@ -196,13 +196,13 @@ public class Graph : MonoBehaviour
                 GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
                 path1.Add(tile.transform);
 
-                if (ind == 0)
-                {
-                    GameObject newObj = new GameObject("a" + index);
+                // if (ind == 0)
+                // {
+                //     GameObject newObj = new GameObject("a" + index);
 
-                    Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
-                    Instantiate(newObj, position, Quaternion.identity);
-                }
+                //     Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
+                //     Instantiate(newObj, position, Quaternion.identity);
+                // }
 
 
             }
@@ -213,23 +213,23 @@ public class Graph : MonoBehaviour
                 GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
                 path1.Add(tile.transform);
 
-                if (ind == 0)
-                {
-                    if (n.isLast)
-                    {
-                        GameObject newObj = new GameObject("aEnd");
+                // if (ind == 0)
+                // {
+                //     if (n.isLast)
+                //     {
+                //         GameObject newObj = new GameObject("aEnd");
 
-                        Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
-                        Instantiate(newObj, position, Quaternion.identity);
-                    }
-                    else
-                    {
-                        GameObject newObj = new GameObject("a" + index);
+                //         Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
+                //         Instantiate(newObj, position, Quaternion.identity);
+                //     }
+                //     else
+                //     {
+                //         GameObject newObj = new GameObject("a" + index);
 
-                        Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
-                        Instantiate(newObj, position, Quaternion.identity);
-                    }
-                }
+                //         Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
+                //         Instantiate(newObj, position, Quaternion.identity);
+                //     }
+                // }
 
 
 
@@ -438,11 +438,16 @@ public class Graph : MonoBehaviour
     {
         List<int> randomNumbers = GenerateUniqueRandomNumbers(0, towerPlacements.Count, 12);
 
+        int index =0;
+
         //List<Node> randomElements = GetRandomElements(towerPlacements, 5);
 
         foreach (var item in randomNumbers)
         {
-            Instantiate(tower, new Vector3(towerPlacements[item].x * 2, -(towerPlacements[item].y * 2) + 1, 0), Quaternion.identity);
+           GameObject t =  Instantiate(tower, new Vector3(towerPlacements[item].x * 2, -(towerPlacements[item].y * 2) + 1, 0), Quaternion.identity);
+           t.name = "tower" + index;
+
+           index++;
         }
         //put towers randomly in the placements available 
 
