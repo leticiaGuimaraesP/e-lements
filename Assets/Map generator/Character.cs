@@ -57,6 +57,7 @@ public class Character : MonoBehaviour
 
     void OnDestroy()
     {
+        if(graph.life > 0)
         graph.life -=1;
     }
 }

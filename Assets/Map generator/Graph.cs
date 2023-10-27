@@ -30,11 +30,18 @@ public class Graph : MonoBehaviour
 
    [SerializeField] public int life;
 
+   public GameObject gameOver;
+   public GameObject gameOverFade;
+
+   bool gameOverInvokeBool = false;
+
 
     // start is called before the first frame update
     void Awake()
     {
-
+        life = 1;
+        GameObject textLife = GameObject.Find("Canvas/Image/Text _life");
+        textLife.AddComponent<Player_life>();
         Vector3 novaEscala = new Vector3((float)2, (float)2.5, 0);
 
         // Atribua a nova escala ao GameObject
@@ -343,14 +350,25 @@ public class Graph : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
          if (life <= 0)
         {
             // A condição para Game Over foi atendida
             // Carregue a cena de Game Over
-            SceneManager.LoadScene("Menu");
+            gameOver.SetActive(true);
+            gameOverFade.SetActive(true);
+            if(!gameOverInvokeBool){
+                gameOverInvokeBool = true;
+                gameOverFade.SetActive(false);
+                Invoke("callMenu", 3f);
+            }
+
         }
         //Debug.Log(life);
+    }
+
+    void callMenu()
+    {
+        SceneManager.LoadScene("Menu");
     }
 
    List<Node> findPossibleTowerPlaces(List<Node> path)
