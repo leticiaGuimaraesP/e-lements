@@ -7,17 +7,14 @@ using UnityEngine.SceneManagement;
 
 public class Graph : MonoBehaviour
 {
-    [SerializeField] private Sprite emptyTile, pathTile, entryTile;
+    [SerializeField] private GameObject emptyTile, pathTile, entryTile;
     [SerializeField] public Node tileNode;
 
-    [SerializeField] public GameObject tilePrefab, Instance_point, tower, pointPrefab, Spawner, Destroyer;
+    [SerializeField] public GameObject Instance_point, tower, pointPrefab, Spawner, Destroyer;
 
     [SerializeField] private GameObject tree, flower, grass, grass2;
 
-
-    private int radius = 24;
-
-    private MatrixGraph matrix;
+    private int radius = 16;
 
     private List<Node> Q1, Q2, Q3, Q4;
 
@@ -26,7 +23,7 @@ public class Graph : MonoBehaviour
     private List<Node> requiredVertices = new List<Node>();
     private List<List<Node>> path = new List<List<Node>>();
 
-    public List<List<Transform>> path_transform = new List<List<Transform>>();
+    //public List<List<Transform>> path_transform = new List<List<Transform>>();
 
    [SerializeField] public int life;
 
@@ -34,6 +31,8 @@ public class Graph : MonoBehaviour
    public GameObject gameOverFade;
 
    bool gameOverInvokeBool = false;
+
+    private MatrixGraph matrix;
 
 
     // start is called before the first frame update
@@ -46,8 +45,6 @@ public class Graph : MonoBehaviour
 
         // Atribua a nova escala ao GameObject
         tower.transform.localScale = novaEscala;
-
-        tileNode.tile = emptyTile;
 
         matrix = new MatrixGraph(radius);
 
@@ -88,18 +85,14 @@ public class Graph : MonoBehaviour
         path1.AddRange(BreadthFirstPaths.BFS(requiredVertices[6], requiredVertices, destination2));
         path2.AddRange(BreadthFirstPaths.BFS(requiredVertices[7], requiredVertices, destination2));
 
-
-        List<Node> possibleTowers = findPossibleTowerPlaces(path1);
-
         printMap();
-
-    
         printPath(path1, 0);
         printPath(path2, 1);
         printPath(path3, 2);
         printPath(path4, 3);
 
-        PutRandomTowers(possibleTowers);
+        // List<Node> possibleTowers = findPossibleTowerPlaces(path1);
+        // PutRandomTowers(possibleTowers);
 
         Spawner.SetActive(true);
         GameObject spawner = Instantiate(Spawner, new Vector2(source1.x * 2, (source1.y) - 1), Quaternion.identity);
@@ -144,29 +137,32 @@ public class Graph : MonoBehaviour
 
                 if (!tileToPrint.isPath)
                 {
-                    tilePrefab.GetComponent<SpriteRenderer>().sprite = emptyTile;
+                    //tilePrefab.GetComponent<SpriteRenderer>().sprite = emptyTile;
 
-                    GameObject tile = Instantiate(tilePrefab, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
-                    if (!tileToPrint.canRecieveTower)
-                    {
-                        int x = Random.Range(0, 10);
-                        if (x % 2 == 0)
-                        {
-                            Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                        }
-                        else if (x % 3 == 0)
-                        {
-                            Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                        }
-                        else if (x % 5 == 0 || x % 7 == 0)
-                        {
-                            Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)+1), Quaternion.identity);
-                        }
-                        else
-                        {
-                            Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                        }
-                    }
+                    GameObject newTile = Instantiate(emptyTile);
+                    newTile.transform.position = new Vector3(tileToPrint.x * 2, -(tileToPrint.y * 2), 0);
+                    newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y));
+
+                    // if (!tileToPrint.canRecieveTower)
+                    // {
+                    //     int x = Random.Range(0, 10);
+                    //     if (x % 2 == 0)
+                    //     {
+                    //         Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                    //     }
+                    //     else if (x % 3 == 0)
+                    //     {
+                    //         Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                    //     }
+                    //     else if (x % 5 == 0 || x % 7 == 0)
+                    //     {
+                    //         Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)+1), Quaternion.identity);
+                    //     }
+                    //     else
+                    //     {
+                    //         Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                    //     }
+                    // }
 
                 }
 
@@ -180,67 +176,41 @@ public class Graph : MonoBehaviour
             tileToPrint = firstPosition.bottom;
         }
 
-        tilePrefab.GetComponent<SpriteRenderer>().sprite = emptyTile;
-        for (int j = 0; j < radius; j++)
-        {
-            Instantiate(tilePrefab, new Vector2(-2, -(j * 2)), Quaternion.identity);
-            Instantiate(tilePrefab, new Vector2(radius * 2, -(j * 2)), Quaternion.identity);
-        }
+        // tilePrefab.GetComponent<SpriteRenderer>().sprite = emptyTile;
+        // for (int j = 0; j < radius; j++)
+        // {
+        //     Instantiate(tilePrefab, new Vector2(-2, -(j * 2)), Quaternion.identity);
+        //     Instantiate(tilePrefab, new Vector2(radius * 2, -(j * 2)), Quaternion.identity);
+        // }
     }
 
     public void printPath(List<Node> path, int ind)
     {
-        // tilePrefab.GetComponent<SpriteRenderer>().sprite = pathTile;
         int index = 0;
-        List<Transform> path1 = new List<Transform>();
+        //List<Transform> path1 = new List<Transform>();
 
         foreach (Node n in path)
         {
 
             if (!n.isEntry)
             {
-                tilePrefab.GetComponent<SpriteRenderer>().sprite = pathTile;
+                //tilePrefab.GetComponent<SpriteRenderer>().sprite = pathTile;
 
-                GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
-                path1.Add(tile.transform);
+                // GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
+                // path1.Add(tile.transform);
 
-                // if (ind == 0)
-                // {
-                //     GameObject newObj = new GameObject("a" + index);
-
-                //     Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
-                //     Instantiate(newObj, position, Quaternion.identity);
-                // }
-
-
+                GameObject newTile = Instantiate(pathTile);
+                newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
             }
             else
             {
-                tilePrefab.GetComponent<SpriteRenderer>().sprite = entryTile;
+                // tilePrefab.GetComponent<SpriteRenderer>().sprite = entryTile;
 
-                GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
-                path1.Add(tile.transform);
+                // GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
+                // path1.Add(tile.transform);
 
-                // if (ind == 0)
-                // {
-                //     if (n.isLast)
-                //     {
-                //         GameObject newObj = new GameObject("aEnd");
-
-                //         Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
-                //         Instantiate(newObj, position, Quaternion.identity);
-                //     }
-                //     else
-                //     {
-                //         GameObject newObj = new GameObject("a" + index);
-
-                //         Vector2 position = new Vector2(tile.transform.position.x, tile.transform.position.y);
-                //         Instantiate(newObj, position, Quaternion.identity);
-                //     }
-                // }
-
-
-
+                GameObject newTile = Instantiate(entryTile);
+                newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
             }
 
             index++;
@@ -248,16 +218,7 @@ public class Graph : MonoBehaviour
 
         }
 
-        path_transform.Add(path1);
-
-
-        //     for (int index = 0; index < masterInstance.path1.Count; index++)
-        // {
-        //     GameObject newObj = new GameObject("a" + index);
-
-        //     Vector3 position = new Vector3(masterInstance.path1[index].x, 0, masterInstance.path1[index].y);
-        //     newObj.transform.position = position;
-        // }
+        //path_transform.Add(path1);
     }
 
 
@@ -290,53 +251,53 @@ public class Graph : MonoBehaviour
         int temp;
 
         //Sorteio dos vértices Q1
-        offset = Random.Range(9, 11);
-        temp = offset * 12;
-        offset = Random.Range(3, 6);
+        offset = Random.Range((radius/3), (radius/2));
+        temp = offset * (radius/2);
+        offset = Random.Range((radius/8), (radius/4));
         pos = offset + temp;
         this.requiredVertices.Add(Q1[pos]);
 
-        offset = Random.Range(3, 6);
-        temp = offset * 12;
-        offset = Random.Range(8, 11);
+        offset = Random.Range((radius/8), (radius/4));
+        temp = offset * (radius/2);
+        offset = Random.Range((radius/3), (radius/2));
         pos = offset + temp;
         requiredVertices.Add(Q1[pos]);
 
 
         //Sorteio dos vértices Q2
-        offset = Random.Range(3, 6);
-        temp = offset * 12;
+        offset = Random.Range((radius/8), (radius/4));
+        temp = offset * (radius/2);
         pos = offset + temp;
         this.requiredVertices.Add(Q2[pos]);
 
-        offset = Random.Range(8, 12);
-        temp = offset * 12;
+        offset = Random.Range((radius/3), (radius/2));
+        temp = offset * (radius/2);
         pos = offset + temp;
         requiredVertices.Add(Q2[pos]);
 
 
         //Sorteio dos vértices Q3
-        offset = Random.Range(2, 5);
-        temp = offset * 12;
+        offset = Random.Range((radius/8), (radius/4));
+        temp = offset * (radius/2);
         pos = offset + temp;
         this.requiredVertices.Add(Q3[pos]);
 
-        offset = Random.Range(8, 10);
-        temp = offset * 12;
+        offset = Random.Range((radius/3), (radius/2));
+        temp = offset * (radius/2);
         pos = offset + temp;
         requiredVertices.Add(Q3[pos]);
         
 
         //Sorteio dos vértices Q4
-        offset = Random.Range(8, 10);
-        temp = offset * 12;
-        offset = Random.Range(2, 5);
+        offset = Random.Range((radius/3), (radius/2));
+        temp = offset * (radius/2);
+        offset = Random.Range((radius/8), (radius/4));
         pos = offset + temp;
         requiredVertices.Add(Q4[pos]);
 
-        offset = Random.Range(2, 5);
-        temp = offset * 12;
-        offset = Random.Range(8, 10);
+        offset = Random.Range((radius/8), (radius/4));
+        temp = offset * (radius/2);
+        offset = Random.Range((radius/3), (radius/2));
         pos = offset + temp;
         this.requiredVertices.Add(Q4[pos]);
         
@@ -373,43 +334,8 @@ public class Graph : MonoBehaviour
 
    List<Node> findPossibleTowerPlaces(List<Node> path)
     {
-        //List<Node> possibleTowerPlace = new List<Node>();
-        // Node tileToPrint = matrix.head.bottom;
-        // for (int i = 0; i < radius; i++)
-        // {
-        //     Node firstPosition = tileToPrint;
-
-        //     for (int j = 0; j < radius; j++)
-        //     {
-        //         if (tileToPrint.isPath == false && tileToPrint.left && tileToPrint.left.isPath)
-        //         {
-        //             tileToPrint.canRecieveTower = true;
-        //         }
-        //         else if (tileToPrint.isPath == false && tileToPrint.right && tileToPrint.right.isPath)
-        //         {
-        //             tileToPrint.canRecieveTower = true;
-        //         }
-        //         else if (tileToPrint.isPath == false && tileToPrint.top && tileToPrint.top.isPath)
-        //         {
-        //             tileToPrint.canRecieveTower = true;
-        //         }
-        //         else if (tileToPrint.isPath == false && tileToPrint.bottom && tileToPrint.bottom.isPath)
-        //         {
-        //             tileToPrint.canRecieveTower = true;
-        //         }
-
-        //         if (tileToPrint.canRecieveTower)
-        //         {
-        //             possibleTowerPlace.Add(tileToPrint);
-        //         }
-        //         tileToPrint = tileToPrint.right;
-        //     }
-        //     tileToPrint = firstPosition.bottom;
-        // }
         //find all nodes adjecent to paths that are not paths
-
         List<Node> possibleTowerPlace = new List<Node>();
-
         foreach(Node n in path){
             if(n != path[0]){
                 if(n.left && n.left.isPath == false){
@@ -434,11 +360,6 @@ public class Graph : MonoBehaviour
 
         return possibleTowerPlace;
     }
-
-    // void ShowScenenary()
-    // {
-    //     //all nodes that are not paths and cant receive towers will have decorations
-    // }
 
     void PutRandomTowers(List<Node> towerPlacements)
     {
@@ -465,13 +386,10 @@ public class Graph : MonoBehaviour
 
 class MatrixGraph
 {
-
     private int radius;
     public int n;
     private int x;
     public Node head;
-
-    //public Node tail;
 
 
     public MatrixGraph(int radius)
