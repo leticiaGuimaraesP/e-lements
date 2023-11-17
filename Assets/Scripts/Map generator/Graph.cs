@@ -14,7 +14,7 @@ public class Graph : MonoBehaviour
 
     [SerializeField] private GameObject tree, flower, grass, grass2;
 
-    private int radius = 16;
+    private int radius = 24;
 
     private List<Node> Q1, Q2, Q3, Q4;
 
@@ -40,7 +40,7 @@ public class Graph : MonoBehaviour
     {
         life = 1;
         GameObject textLife = GameObject.Find("Canvas/Image/Text _life");
-        textLife.AddComponent<Player_life>();
+        //textLife.AddComponent<Player_life>();
         Vector3 novaEscala = new Vector3((float)2, (float)2.5, 0);
 
         // Atribua a nova escala ao GameObject
