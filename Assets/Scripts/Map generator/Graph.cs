@@ -34,6 +34,8 @@ public class Graph : MonoBehaviour
 
     private MatrixGraph matrix;
 
+    [SerializeField] private Transform map;
+
 
     // start is called before the first frame update
     void Awake()
@@ -141,7 +143,7 @@ public class Graph : MonoBehaviour
 
                     GameObject newTile = Instantiate(emptyTile);
                     newTile.transform.position = new Vector3(tileToPrint.x * 2, -(tileToPrint.y * 2), 0);
-                    newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y));
+                    newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y), map);
 
                     // if (!tileToPrint.canRecieveTower)
                     // {
@@ -175,50 +177,32 @@ public class Graph : MonoBehaviour
 
             tileToPrint = firstPosition.bottom;
         }
-
-        // tilePrefab.GetComponent<SpriteRenderer>().sprite = emptyTile;
-        // for (int j = 0; j < radius; j++)
-        // {
-        //     Instantiate(tilePrefab, new Vector2(-2, -(j * 2)), Quaternion.identity);
-        //     Instantiate(tilePrefab, new Vector2(radius * 2, -(j * 2)), Quaternion.identity);
-        // }
     }
 
     public void printPath(List<Node> path, int ind)
     {
         int index = 0;
-        //List<Transform> path1 = new List<Transform>();
 
         foreach (Node n in path)
         {
 
             if (!n.isEntry)
             {
-                //tilePrefab.GetComponent<SpriteRenderer>().sprite = pathTile;
-
-                // GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
-                // path1.Add(tile.transform);
-
                 GameObject newTile = Instantiate(pathTile);
                 newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
+                //newTile.GetComponent<TileScript>().Setup(new Point(n.x, n.y), map);
+                newTile.transform.SetParent(map);
             }
             else
             {
-                // tilePrefab.GetComponent<SpriteRenderer>().sprite = entryTile;
-
-                // GameObject tile = Instantiate(tilePrefab, new Vector2(n.x * 2, -(n.y * 2)), Quaternion.identity);
-                // path1.Add(tile.transform);
-
                 GameObject newTile = Instantiate(entryTile);
                 newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
+                newTile.transform.SetParent(map);
             }
 
             index++;
 
-
         }
-
-        //path_transform.Add(path1);
     }
 
 

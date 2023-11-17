@@ -19,8 +19,9 @@ public class TileScript : MonoBehaviour
         
     }
 
-    public void Setup(Point gridPos){
+    public void Setup(Point gridPos, Transform parent){
         this.GridPosition = gridPos;
+        transform.SetParent(parent);
     }
 
     private void OnMouseOver(){
