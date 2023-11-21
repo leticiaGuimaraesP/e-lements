@@ -1,3 +1,4 @@
+using static System.Math;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -168,9 +169,7 @@ public class Graph : MonoBehaviour
 
                 }
 
-
-
-                // GameObject tile = Instantiate(tilePrefab, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
+                //GameObject tile = Instantiate(tilePrefab, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
                 tileToPrint = tileToPrint.right;
             }
 
@@ -364,7 +363,154 @@ public class Graph : MonoBehaviour
 
     }
 
-  
+
+    //Algoritmo A*
+    public List<Node> BestPath(Node entry, Node destiny1, Node destiny2) //Origem e os dois destinos
+    {
+        List<Node> bestPath = new List<Node>();
+        bestPath = null;
+
+        List<Node> openSet = new List<Node>();
+        HashSet<Node> closedSet = new HashSet<Node>();
+
+        openSet.Add(entry);
+        entry.parent = null;
+        entry.distEntry = 0;
+        entry.heuristic = CalculateHeuristic(entry, destiny1, destiny2);
+        entry.funcN = CalculateFunction(entry);
+        
+
+        while (openSet.Count > 0) //Não sei se esse teste está correto
+        {
+            Node current = openSet[0];
+
+            // Encontra o nó com o menor custo total F
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].funcN < current.funcN || (openSet[i].funcN == current.funcN && openSet[i].heuristic < current.heuristic))
+                {
+                    current = openSet[i];
+                }
+            }
+            //Debug.Log(current.x+" "+current.y);
+
+            openSet.Remove(current);
+            closedSet.Add(current);
+
+            if (current == destiny1 || current == destiny2) //Se o caminho chegou no destino
+            {
+                bestPath = ReconstructPath(current);
+                return bestPath;
+            }
+
+            // Para cada vizinho do nó atual
+            foreach (Node neighbor in GetNeighbors(current))
+            {
+                if (closedSet.Contains(neighbor))
+                        continue;
+
+                if(neighbor.isPath){ //Valida se o vizinho faz parte de algum caminho
+                    int tentativeDist = current.distEntry + 1; // Custo de movimento é assumido como 1
+
+                    // Se o vizinho não está no conjunto aberto ou tem um custo menor do que calculado anterriormente
+                    if (!openSet.Contains(neighbor) || tentativeDist < neighbor.distEntry)
+                    {
+                        //atualiza os dados
+                        neighbor.parent = current;
+                        neighbor.distEntry = tentativeDist;
+                        neighbor.heuristic = CalculateHeuristic(neighbor, destiny1, destiny2);
+                        neighbor.funcN = CalculateFunction(neighbor);
+
+                        // Se o vizinho não está no conjunto aberto, adiciona
+                        if (!openSet.Contains(neighbor))
+                        {
+                            openSet.Add(neighbor);
+                        }
+                    }
+                }
+            }   
+        }
+        return bestPath;
+    }
+
+
+    static List<Node> GetNeighbors(Node node)
+    {
+        List<Node> neighbors = new List<Node>();
+
+        if(node.top!=null)
+            neighbors.Add(node.top);
+
+        if(node.bottom!=null)
+            neighbors.Add(node.bottom);
+
+        if(node.left!=null)
+            neighbors.Add(node.left);
+
+        if(node.right!=null)
+            neighbors.Add(node.right);
+
+        return neighbors;
+    }
+
+    public double CalculateHeuristic(Node a, Node b, Node c)
+    {
+        //Heuristica em relação ao destino 1
+        double val1 = Pow(Abs(b.x - a.x), 2);
+        double val2 = Pow(Abs(b.y - a.y), 2);
+        double result1 = Sqrt(val1 + val2);
+
+        //Heuristica em relação ao destino 2
+        val1 = Pow(Abs(c.x - a.x), 2);
+        val2 = Pow(Abs(c.y - a.y), 2);
+        double result2 = Sqrt(val1 + val2);
+
+        //Retorna a menor Heuristica
+        if(result1 < result2){
+            return result1;
+        }else{
+            return result2;
+        } 
+    }
+
+    //f(n) = distPercorrida + heuristica
+    public double CalculateFunction(Node a)
+    {
+        return a.distEntry + a.heuristic;
+    }
+
+    public int CalculateDist(Node a)
+    {
+        int dist;
+        if(a.parent==null){ // Se o no for a raiz
+            dist = 0;
+        }else{
+            dist = a.parent.distEntry + 1; // Toda aresta possui custo 1
+        }
+        return dist;
+    }
+
+    // Reconstroi o caminho a partir do no final
+    static List<Node> ReconstructPath(Node node)
+    {
+        List<Node> path = new List<Node>();
+        while (node != null)
+        {
+            //Debug.Log("entrou");
+            path.Add(node);
+            node = node.parent;
+        }
+        
+        //path.Add(node); // Adiciona o ultimo nó (origem do caminho)
+        path.Reverse(); // Reverte a ordem para obter do início ao fim
+
+        // foreach(Node no in path){
+        //     Debug.Log(no.x+" "+no.y);
+        // }
+
+        return path;
+    }
+
 }
 
 
