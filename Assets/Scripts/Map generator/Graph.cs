@@ -97,14 +97,6 @@ public class Graph : MonoBehaviour
         printPath(path2, 1);
         printPath(path3, 2);
         printPath(path4, 3);
-
-        // List<Node> possibleTowers = findPossibleTowerPlaces(path1);
-        // PutRandomTowers(possibleTowers);
-
-        Spawner.SetActive(true);
-        GameObject spawner = Instantiate(Spawner, new Vector2(source1.x * 2, (source1.y) - 1), Quaternion.identity);
-
-        GameObject destroyer = Instantiate(Destroyer, new Vector2(destination2.x * 2, -(destination2.y)*2 - 1), Quaternion.identity);
     }
 
     List<int> GenerateUniqueRandomNumbers(int min, int max, int count)
@@ -150,33 +142,32 @@ public class Graph : MonoBehaviour
                     newTile.transform.position = new Vector3(tileToPrint.x * 2, -(tileToPrint.y * 2), 0);
                     newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y), map);
 
-                    if (!tileToPrint.canRecieveTower)
-                    {
-                         int x = Random.Range(0, 10);
-                         if (x % 2 == 0)
-                         {
-                            Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                         }
-                         else if (x % 3 == 0)
-                         {
-                             Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                         }
-                         else if (x % 5 == 0 || x % 7 == 0)
-                         {
-                           GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
-                           // float treeZPosition = 1.5f; // Defina a posição Z desejada para a árvore
-                           //newTree.transform.position = new Vector3(newTree.transform.position.x, newTree.transform.position.y, treeZPosition);
+                    // if (!tileToPrint.canRecieveTower)
+                    // {
+                    //      int x = Random.Range(0, 10);
+                    //      if (x % 2 == 0)
+                    //      {
+                    //         Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                    //      }
+                    //      else if (x % 3 == 0)
+                    //      {
+                    //          Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                    //      }
+                    //      else if (x % 5 == 0 || x % 7 == 0)
+                    //      {
+                    //        GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
+                    //        // float treeZPosition = 1.5f; // Defina a posição Z desejada para a árvore
+                    //        //newTree.transform.position = new Vector3(newTree.transform.position.x, newTree.transform.position.y, treeZPosition);
 
-                         }
-                         else
-                        {
-                             Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                         }
-                    }
+                    //      }
+                    //      else
+                    //     {
+                    //          Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                    //      }
+                    // }
 
                 }
 
-                //GameObject tile = Instantiate(tilePrefab, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
                 tileToPrint = tileToPrint.right;
             }
 
@@ -197,7 +188,6 @@ public class Graph : MonoBehaviour
             {
                 GameObject newTile = Instantiate(pathTile);
                 newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
-                //newTile.GetComponent<TileScript>().Setup(new Point(n.x, n.y), map);
                 newTile.transform.SetParent(map);
                 path1.Add(newTile.transform);
             }
@@ -222,17 +212,12 @@ public class Graph : MonoBehaviour
         x = Random.Range(0, matrix.n - 7);
         source1 = Q1[x];
 
-        //x = Random.Range(matrix.n - 5, matrix.n);
-        //source2 = Q2[x];
-
         x = Random.Range(Q3.Count - (matrix.n - 1), Q3.Count - 6);
         destination1 = Q3[x];
 
         x = Random.Range(Q4.Count - (matrix.n - 6), Q4.Count - 1);
         destination2 = Q4[x];
 
-        //source1.isPath = source2.isPath = destination1.isPath = destination2.isPath = true;
-        //source1.isEntry = source2.isEntry = destination1.isEntry = destination2.isEntry = true;
         source1.isPath = destination1.isPath = destination2.isPath = true;
         source1.isEntry = destination1.isEntry = destination2.isEntry = true;
 
@@ -318,60 +303,11 @@ public class Graph : MonoBehaviour
             }
 
         }
-        //Debug.Log(life);
     }
 
     void callMenu()
     {
         SceneManager.LoadScene("Menu");
-    }
-
-   List<Node> findPossibleTowerPlaces(List<Node> path)
-    {
-        //find all nodes adjecent to paths that are not paths
-        List<Node> possibleTowerPlace = new List<Node>();
-        foreach(Node n in path){
-            if(n != path[0]){
-                if(n.left && n.left.isPath == false){
-                    n.left.canRecieveTower = true;
-                    possibleTowerPlace.Add(n.left);
-                }
-                if(n.right && n.right.isPath == false){
-                    n.right.canRecieveTower = true;
-                    possibleTowerPlace.Add(n.right);
-                }
-                if(n.top && n.top.isPath == false){
-                    n.top.canRecieveTower = true;
-                    possibleTowerPlace.Add(n.top);
-                }
-                if(n.bottom && n.bottom.isPath == false){
-                    n.bottom.canRecieveTower = true;
-                    possibleTowerPlace.Add(n.bottom);
-                }
-            }
-        }
-    
-
-        return possibleTowerPlace;
-    }
-
-    void PutRandomTowers(List<Node> towerPlacements)
-    {
-        List<int> randomNumbers = GenerateUniqueRandomNumbers(0, towerPlacements.Count, 12);
-
-        int index =0;
-
-        //List<Node> randomElements = GetRandomElements(towerPlacements, 5);
-
-        foreach (var item in randomNumbers)
-        {
-           GameObject t =  Instantiate(tower, new Vector3(towerPlacements[item].x * 2, -(towerPlacements[item].y * 2) + 1, 0), Quaternion.identity);
-           t.name = "tower" + index;
-
-           index++;
-        }
-        //put towers randomly in the placements available 
-
     }
 
 
@@ -403,7 +339,6 @@ public class Graph : MonoBehaviour
                     current = openSet[i];
                 }
             }
-            //Debug.Log(current.x+" "+current.y);
 
             openSet.Remove(current);
             closedSet.Add(current);
@@ -484,7 +419,6 @@ public class Graph : MonoBehaviour
         } 
     }
 
-    //f(n) = distPercorrida + heuristica
     public double CalculateFunction(Node a)
     {
         return a.distEntry + a.heuristic;
@@ -512,12 +446,8 @@ public class Graph : MonoBehaviour
             node = node.parent;
         }
         
-        //path.Add(node); // Adiciona o ultimo nó (origem do caminho)
+        // Adiciona o ultimo nó (origem do caminho)
         path.Reverse(); // Reverte a ordem para obter do início ao fim
-
-        // foreach(Node no in path){
-        //     Debug.Log(no.x+" "+no.y);
-        // }
 
         return path;
     }
@@ -650,9 +580,4 @@ class MatrixGraph
         return list;
     }
 
-
-    // public void fill()
-    // {
-
-    // }
 }
