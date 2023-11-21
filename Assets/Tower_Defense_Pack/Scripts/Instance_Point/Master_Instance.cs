@@ -49,40 +49,6 @@ public class Master_Instance : MonoBehaviour {
 	private int indexcurrentWave;
 	private int indexcurrentenemy;
 	// Use this for initialization
-
-	// private List<List<Transform>> pathTransform;
-
-	// private Graph graph;
-
-
-	// void Start()
-	// {
-	// 	GameObject graphObject = GameObject.Find("Graph");
-
-	// 	graph = graphObject.GetComponent<Graph>();
-
-	// 	if (graph != null)
-	// 	{
-	// 		pathTransform = graph.path_transform;
-
-	// 		path_size = pathTransform[0].Count;
-
-	// 		path = new Transform[path_size];
-
-	// 		for (int i = 0; i < path_size - 1; i++)
-	// 		{
-	// 			path[i] = pathTransform[0][i];
-	// 		}
-	// 	}
-
-	// 	spawner = this.gameObject; //?
-
-	// 	// Vector3 cpPosition = new Vector3(1.0f, 1.0f, 0.0f); //?
-	// 	// GameObject CP = Instantiate(Resources.Load("CP/CP"), cpPosition, Quaternion.identity) as GameObject; //?
-
-	// }
-
-
 	void Start () {
 		path_size = getsize ();
 		money = GameObject.Find("Money").GetComponent<Text>();
@@ -90,12 +56,10 @@ public class Master_Instance : MonoBehaviour {
 		/*Creating path array ========== */
 		path = new Transform[path_size];
 		for (int i=0; i<path_size-1;i++){//Searching the points, the points must be named like: "a0,a1,a2,a3..."
-			path[i]=GameObject.Find("a" + i+ "(Clone)").transform;
+			path[i]=GameObject.Find("a" + i).transform;
 		}
 		/*============================== */
 		spawner = this.gameObject;
-		Vector3 cpPosition = new Vector3(1.0f, 1.0f, 0.0f);
-		GameObject CP = Instantiate(Resources.Load("CP/CP"), cpPosition, Quaternion.identity) as GameObject;
 	}
 	
 	// Update is called once per frame
@@ -122,7 +86,6 @@ public class Master_Instance : MonoBehaviour {
     /// <param name="enemiesNumber">Number of enemies</param>
     /// <param name="enemytype">Type of enemies of this wave</param>
 	public void createWave(int enemiesNumber, int enemytype){
-		Debug.Log("create wave");
 		wavePlaying=true;
 		waveCount=enemiesNumber;
 	}
@@ -132,7 +95,6 @@ public class Master_Instance : MonoBehaviour {
     /// <param name="waveArray"></param>
     /// <param name="index"></param>
 	public void createWave(Transform[] waveArray, int index){
-		Debug.Log("create wave");
 		wavePlaying=true;
 		waveCount= waveArray[index].GetComponent<waves>().enemyList.Count;
 		currentWave = waveArray;
@@ -143,10 +105,8 @@ public class Master_Instance : MonoBehaviour {
     /// Instantiate an enemy
     /// </summary>
 	private void Instantiate_Enemy(){
-		Debug.Log("enemy");
 		/*Enemy prefab selection ===========================================*/
 		GameObject Enemy = Instantiate(Resources.Load("Enemies/" + currentWave[indexcurrentWave].GetComponent<waves>().enemyList[indexcurrentenemy]), new Vector3(spawner.transform.position.x+ Random.Range(-seed, seed),spawner.transform.position.y+ Random.Range(-seed, seed),spawner.transform.position.z), Quaternion.identity)as GameObject;
-		// Debug.Log(Enemy);
 		Enemy.transform.SetParent(this.gameObject.transform);
 		PathFollower EnemyPathProperties = Enemy.GetComponent<PathFollower>();
 		Enemies_Controller EnemyPropierties = Enemy.GetComponent<Enemies_Controller>();
@@ -229,7 +189,7 @@ public class Master_Instance : MonoBehaviour {
     /// <returns></returns>
 	int getsize(){
 		int i = 0;
-		while(GameObject.Find("a" + i+ "(Clone)")){
+		while(GameObject.Find("a" + i)){
 			i++;
 		}
 		i++;//end point
@@ -272,13 +232,4 @@ public class Master_Instance : MonoBehaviour {
             SceneManager.LoadScene("Example_Scene3");
 		}
 	}
-
-
-	/// <param name="pos">position</param>
-		private static void Instantiate_CP(Transform pos){
-			Vector3 cpos = pos.position;
-			cpos.y = cpos.y - 0.1f;
-			GameObject CP = Instantiate(Resources.Load("CP/CP"), cpos, Quaternion.identity)as GameObject;
-			CP.name="CP";
-		}
 }

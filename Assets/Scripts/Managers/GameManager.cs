@@ -80,8 +80,8 @@ public class GameManager : Singleton<GameManager>
                 break;
         }
 
-        Pool.GetObject(type);
-        //Pool.GetObject(type).GetComponent<Monster>();
+        Enemy enemy = Pool.GetObject(type).GetComponent<Enemy>();
+        enemy.Spawn();
 
         yield return new WaitForSeconds(2.5f);
     }

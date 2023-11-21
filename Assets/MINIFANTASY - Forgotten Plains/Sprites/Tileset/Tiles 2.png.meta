@@ -2601,7 +2601,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dirt6
+      name: End
       rect:
         serializedVersion: 2
         x: 100
@@ -9466,11 +9466,11 @@ TextureImporter:
       Dirt3: -8988517981366986819
       Dirt4: -4347491678797418330
       Dirt5: 379406905535426505
-      Dirt6: -1748832395696345806
       Dirt7: 7663075464098576306
       Dirt8: -8469148042810489581
       Dirt9: 8807267928992789121
       DirtRed: -2312857263472460830
+      End: -1748832395696345806
       Grass1: -696654465008527618
       Grass10: 6972464331449536496
       Grass11: -895709937133249447

@@ -7,6 +7,10 @@ public class Node : ScriptableObject
 {
     public GameObject tile;
 
+    public Vector2 WorldPosition { get; set; }
+
+    public Point GridPosition {get; private set;}
+
     public Node top = null;
     public Node bottom = null;
     public Node left = null;
