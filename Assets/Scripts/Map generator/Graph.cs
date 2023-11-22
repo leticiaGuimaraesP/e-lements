@@ -1,12 +1,18 @@
 using static System.Math;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Graph : MonoBehaviour
 {
-    [SerializeField] private GameObject emptyTile, pathTile, entryTile;
+    [SerializeField] private GameObject emptyTile, pathTile, entryTile, endTile;
+
+    public static Entry Entry { get; set; }
+
+    private Point entrySpawn;
+
     [SerializeField] public Node tileNode;
 
     [SerializeField] public GameObject Instance_point, tower, pointPrefab, Spawner, Destroyer;
@@ -20,7 +26,19 @@ public class Graph : MonoBehaviour
     private Node source1, source2, destination1, destination2;
 
     private List<Node> requiredVertices = new List<Node>();
-    private List<List<Node>> path = new List<List<Node>>();
+    private List<Node> bestPath;
+
+    public List<Node> BestPath{
+        get{
+            if(bestPath == null){
+                bestPath = FindBestPath(source1, destination1, destination2);
+                printPath(bestPath);
+            }
+            return new List<Node>(new List<Node>(bestPath));
+        }
+    }
+
+    public List<List<Transform>> path_transform = new List<List<Transform>>();
 
     [SerializeField] public int life;
 
@@ -38,6 +56,7 @@ public class Graph : MonoBehaviour
     {
         life = 1;
         GameObject textLife = GameObject.Find("Canvas/Image/Text _life");
+        //textLife.AddComponent<Player_life>();
         Vector3 novaEscala = new Vector3((float)2, (float)2.5, 0);
 
         // Atribua a nova escala ao GameObject
@@ -83,13 +102,18 @@ public class Graph : MonoBehaviour
         path2.AddRange(BreadthFirstPaths.BFS(requiredVertices[7], requiredVertices, destination2));
 
         printMap();
-        printPath(path1, 0);
-        printPath(path2, 1);
-        printPath(path3, 2);
-        printPath(path4, 3);
+
+        //Encontra o melhor caminho (mais curto) da origem até o destino
+        bestPath = FindBestPath(source1, destination1, destination2);
+        printPath(bestPath);
+
+        printPath(path1);
+        printPath(path2);
+        printPath(path3);
+        printPath(path4);
     }
 
-    List<int> GenerateUniqueRandomNumbers(int min, int max, int count)
+    public List<int> GenerateUniqueRandomNumbers(int min, int max, int count)
     {
         if (count > max - min + 1 || max < min)
         {
@@ -129,27 +153,31 @@ public class Graph : MonoBehaviour
                     GameObject newTile = Instantiate(emptyTile);
                     newTile.transform.position = new Vector3(tileToPrint.x * 2, -(tileToPrint.y * 2), 0);
                     newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y), map);
+                    tileToPrint.TileRef = newTile.GetComponent<TileScript>();
 
-                    // if (!tileToPrint.canRecieveTower)
-                    // {
-                    //     int x = Random.Range(0, 10);
-                    //     if (x % 2 == 0)
-                    //     {
-                    //         Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                    //     }
-                    //     else if (x % 3 == 0)
-                    //     {
-                    //         Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                    //     }
-                    //     else if (x % 5 == 0 || x % 7 == 0)
-                    //     {
-                    //         Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)+1), Quaternion.identity);
-                    //     }
-                    //     else
-                    //     {
-                    //         Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                    //     }
-                    // }
+                    if (!tileToPrint.canRecieveTower)
+                    {
+                         int x = Random.Range(0, 10);
+                         if (x % 2 == 0)
+                         {
+                            Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                         }
+                         else if (x % 3 == 0)
+                         {
+                             Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                         }
+                         else if (x % 5 == 0 || x % 7 == 0)
+                         {
+                           GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
+                           // float treeZPosition = 1.5f; // Defina a posição Z desejada para a árvore
+                           //newTree.transform.position = new Vector3(newTree.transform.position.x, newTree.transform.position.y, treeZPosition);
+
+                         }
+                         else
+                        {
+                             Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                         }
+                    }
 
                 }
 
@@ -161,28 +189,43 @@ public class Graph : MonoBehaviour
         }
     }
 
-    public void printPath(List<Node> path, int ind)
+    public void printPath(List<Node> path)
     {
         int index = 0;
+        List<Transform> path1 = new List<Transform>();
 
         foreach (Node n in path)
         {
 
-            if (!n.isEntry)
+            if (!n.isEntry && !n.isLast)
             {
                 GameObject newTile = Instantiate(pathTile);
                 newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
                 newTile.transform.SetParent(map);
+                path1.Add(newTile.transform);
+            }
+            else if (n.isEntry == true)
+            {
+                entrySpawn = new Point(n.x * 2, -(n.y * 2));
+                GameObject tmp = Instantiate(entryTile);
+                tmp.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
+                tmp.transform.SetParent(map);
+                Entry = tmp.GetComponent<Entry>();
+                Entry.name = "Entry";
+                path1.Add(tmp.transform);
             }
             else
             {
-                GameObject newTile = Instantiate(entryTile);
+                GameObject newTile = Instantiate(endTile);
                 newTile.transform.position = new Vector3(n.x * 2, -(n.y * 2), 0);
                 newTile.transform.SetParent(map);
+                path1.Add(newTile.transform);
             }
 
             index++;
         }
+
+        path_transform.Add(path1);
     }
 
     public void sortSourceAndDestination()
@@ -198,66 +241,69 @@ public class Graph : MonoBehaviour
         destination2 = Q4[x];
 
         source1.isPath = destination1.isPath = destination2.isPath = true;
-        source1.isEntry = destination1.isEntry = destination2.isEntry = true;
+        source1.isEntry = destination1.isLast = destination2.isLast = true;
 
         destination1.isLast = destination2.isLast = true;
     }
-     public void sortQVertex()
+
+    public void sortQVertex()
     {
         int pos;
         int offset;
         int temp;
 
         //Sorteio dos vértices Q1
-        offset = Random.Range((radius/3), (radius/2));
-        temp = offset * (radius/2);
-        offset = Random.Range((radius/8), (radius/4));
+        offset = Random.Range((radius / 3), (radius / 2));
+        temp = offset * (radius / 2);
+        offset = Random.Range((radius / 8), (radius / 4));
         pos = offset + temp;
         this.requiredVertices.Add(Q1[pos]);
 
-        offset = Random.Range((radius/8), (radius/4));
-        temp = offset * (radius/2);
-        offset = Random.Range((radius/3), (radius/2));
+        offset = Random.Range((radius / 8), (radius / 4));
+        temp = offset * (radius / 2);
+        offset = Random.Range((radius / 3), (radius / 2));
         pos = offset + temp;
         requiredVertices.Add(Q1[pos]);
 
+
         //Sorteio dos vértices Q2
-        offset = Random.Range((radius/8), (radius/4));
-        temp = offset * (radius/2);
+        offset = Random.Range((radius / 8), (radius / 4));
+        temp = offset * (radius / 2);
         pos = offset + temp;
         this.requiredVertices.Add(Q2[pos]);
 
-        offset = Random.Range((radius/3), (radius/2));
-        temp = offset * (radius/2);
+        offset = Random.Range((radius / 3), (radius / 2));
+        temp = offset * (radius / 2);
         pos = offset + temp;
         requiredVertices.Add(Q2[pos]);
 
 
         //Sorteio dos vértices Q3
-        offset = Random.Range((radius/8), (radius/4));
-        temp = offset * (radius/2);
+        offset = Random.Range((radius / 8), (radius / 4));
+        temp = offset * (radius / 2);
         pos = offset + temp;
         this.requiredVertices.Add(Q3[pos]);
 
-        offset = Random.Range((radius/3), (radius/2));
-        temp = offset * (radius/2);
+        offset = Random.Range((radius / 3), (radius / 2));
+        temp = offset * (radius / 2);
         pos = offset + temp;
         requiredVertices.Add(Q3[pos]);
-        
+
 
         //Sorteio dos vértices Q4
-        offset = Random.Range((radius/3), (radius/2));
-        temp = offset * (radius/2);
-        offset = Random.Range((radius/8), (radius/4));
+        offset = Random.Range((radius / 3), (radius / 2));
+        temp = offset * (radius / 2);
+        offset = Random.Range((radius / 8), (radius / 4));
         pos = offset + temp;
         requiredVertices.Add(Q4[pos]);
 
-        offset = Random.Range((radius/8), (radius/4));
-        temp = offset * (radius/2);
-        offset = Random.Range((radius/3), (radius/2));
+        offset = Random.Range((radius / 8), (radius / 4));
+        temp = offset * (radius / 2);
+        offset = Random.Range((radius / 3), (radius / 2));
         pos = offset + temp;
         this.requiredVertices.Add(Q4[pos]);
-        
+
+
         foreach (Node n in requiredVertices)
         {
             n.isPath = true;
@@ -267,13 +313,14 @@ public class Graph : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         if (life <= 0)
+        if (life <= 0)
         {
             // A condição para Game Over foi atendida
             // Carregue a cena de Game Over
             gameOver.SetActive(true);
             gameOverFade.SetActive(true);
-            if(!gameOverInvokeBool){
+            if (!gameOverInvokeBool)
+            {
                 gameOverInvokeBool = true;
                 gameOverFade.SetActive(false);
                 Invoke("callMenu", 3f);
@@ -288,7 +335,7 @@ public class Graph : MonoBehaviour
     }
 
     //Algoritmo A*
-    public List<Node> BestPath(Node entry, Node destiny1, Node destiny2) //Origem e os dois destinos
+    public List<Node> FindBestPath(Node entry, Node destiny1, Node destiny2) //Origem e os dois destinos
     {
         List<Node> bestPath = new List<Node>();
         bestPath = null;
@@ -301,7 +348,7 @@ public class Graph : MonoBehaviour
         entry.distEntry = 0;
         entry.heuristic = CalculateHeuristic(entry, destiny1, destiny2);
         entry.funcN = CalculateFunction(entry);
-        
+
 
         while (openSet.Count > 0) //Não sei se esse teste está correto
         {
@@ -315,7 +362,6 @@ public class Graph : MonoBehaviour
                     current = openSet[i];
                 }
             }
-            //Debug.Log(current.x+" "+current.y);
 
             openSet.Remove(current);
             closedSet.Add(current);
@@ -330,9 +376,10 @@ public class Graph : MonoBehaviour
             foreach (Node neighbor in GetNeighbors(current))
             {
                 if (closedSet.Contains(neighbor))
-                        continue;
+                    continue;
 
-                if(neighbor.isPath){ //Valida se o vizinho faz parte de algum caminho
+                if (neighbor.isPath)
+                { //Valida se o vizinho faz parte de algum caminho
                     int tentativeDist = current.distEntry + 1; // Custo de movimento é assumido como 1
 
                     // Se o vizinho não está no conjunto aberto ou tem um custo menor do que calculado anterriormente
@@ -351,7 +398,7 @@ public class Graph : MonoBehaviour
                         }
                     }
                 }
-            }   
+            }
         }
         return bestPath;
     }
@@ -360,16 +407,16 @@ public class Graph : MonoBehaviour
     {
         List<Node> neighbors = new List<Node>();
 
-        if(node.top!=null)
+        if (node.top != null)
             neighbors.Add(node.top);
 
-        if(node.bottom!=null)
+        if (node.bottom != null)
             neighbors.Add(node.bottom);
 
-        if(node.left!=null)
+        if (node.left != null)
             neighbors.Add(node.left);
 
-        if(node.right!=null)
+        if (node.right != null)
             neighbors.Add(node.right);
 
         return neighbors;
@@ -388,14 +435,16 @@ public class Graph : MonoBehaviour
         double result2 = Sqrt(val1 + val2);
 
         //Retorna a menor Heuristica
-        if(result1 < result2){
+        if (result1 < result2)
+        {
             return result1;
-        }else{
+        }
+        else
+        {
             return result2;
-        } 
+        }
     }
 
-    //f(n) = distPercorrida + heuristica
     public double CalculateFunction(Node a)
     {
         return a.distEntry + a.heuristic;
@@ -404,9 +453,12 @@ public class Graph : MonoBehaviour
     public int CalculateDist(Node a)
     {
         int dist;
-        if(a.parent==null){ // Se o no for a raiz
+        if (a.parent == null)
+        { // Se o no for a raiz
             dist = 0;
-        }else{
+        }
+        else
+        {
             dist = a.parent.distEntry + 1; // Toda aresta possui custo 1
         }
         return dist;
@@ -422,13 +474,9 @@ public class Graph : MonoBehaviour
             path.Add(node);
             node = node.parent;
         }
-        
-        //path.Add(node); // Adiciona o ultimo nó (origem do caminho)
-        path.Reverse(); // Reverte a ordem para obter do início ao fim
 
-        // foreach(Node no in path){
-        //     Debug.Log(no.x+" "+no.y);
-        // }
+        // Adiciona o ultimo nó (origem do caminho)
+        path.Reverse(); // Reverte a ordem para obter do início ao fim
 
         return path;
     }

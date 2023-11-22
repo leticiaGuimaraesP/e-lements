@@ -7,6 +7,22 @@ public class Node : ScriptableObject
 {
     public GameObject tile;
 
+    private Vector2 worldPosition;
+
+    public Vector2 WorldPosition {
+        get{
+            return WorldPosition;
+        }
+
+        set{
+            worldPosition = TileRef.WorldPosition;
+        }
+    }
+
+    public Point GridPosition {get; private set;}
+
+    public TileScript TileRef { get; set; }
+
     public Node top = null;
     public Node bottom = null;
     public Node left = null;
@@ -34,6 +50,7 @@ public class Node : ScriptableObject
     public Node(int x, int y){
         this.x = x;
         this.y = y;
+        this.GridPosition = new Point(x, y);
     }
 
     public Node(){}
