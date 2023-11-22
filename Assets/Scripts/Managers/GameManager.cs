@@ -10,6 +10,8 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private Text currencyTxt;
 
+    private Tower selectedTower;
+
     public int Currency{
         get{
             return currency;
@@ -45,6 +47,11 @@ public class GameManager : Singleton<GameManager>
 
             Hover.Instance.Deactivate();
         }
+    }
+
+    public void SelectTower(Tower tower) {
+        selectedTower = tower;
+        selectedTower.Select();
     }
 
     private void HandleEscape(){

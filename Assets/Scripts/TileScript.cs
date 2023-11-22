@@ -11,7 +11,9 @@ public class TileScript : MonoBehaviour
 
     private Color32 emptyColor = new Color32(12, 183, 9, 255);
 
-    public bool IsEmpty { get; set; }
+    public bool IsEmpty { get; private set; }
+
+    private Tower myTower;
 
     private SpriteRenderer spriteRenderer;
 
@@ -44,7 +46,14 @@ public class TileScript : MonoBehaviour
             else if(Input.GetMouseButtonDown(0)){
                 PlaceTower();
             }
+        } else if (!EventSystem.current.IsPointerOverGameObject() && GameManager.Instance.ClickedBtn == null && Input.GetMouseButtonDown(0)) {
+            if (myTower != null) {
+                GameManager.Instance.SelectTower(myTower);
+            } else {
+
+            }
         }
+
     }
 
     private void OnMouseExit(){
@@ -57,6 +66,8 @@ public class TileScript : MonoBehaviour
         tower.transform.Find("Mage").GetComponent<SpriteRenderer>().sortingOrder = GridPosition.Y;
         
         tower.transform.SetParent(transform);
+
+        this.myTower = tower.transform.GetChild(6).GetComponent<Tower>();
 
         IsEmpty = false;
 
