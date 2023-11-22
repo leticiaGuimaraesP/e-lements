@@ -7,6 +7,13 @@ public class TileScript : MonoBehaviour
 {
     public Point GridPosition {get; private set;}
 
+    public Vector2 WorldPosition{
+        get{
+            return new Vector2(transform.position.x + (GetComponent<SpriteRenderer>().bounds.size.x/2), 
+                transform.position.y - (GetComponent<SpriteRenderer>().bounds.size.y/2));
+        }
+    }
+
     private Color32 fullColor = new Color32(255, 0, 0, 255);
 
     private Color32 emptyColor = new Color32(12, 183, 9, 255);

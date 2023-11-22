@@ -5,8 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-
 public class Graph : MonoBehaviour
 {
     [SerializeField] private GameObject emptyTile, pathTile, entryTile, endTile;
@@ -153,11 +151,11 @@ public class Graph : MonoBehaviour
 
                 if (!tileToPrint.isPath)
                 {
-                    //tilePrefab.GetComponent<SpriteRenderer>().sprite = emptyTile;
-
                     GameObject newTile = Instantiate(emptyTile);
                     newTile.transform.position = new Vector3(tileToPrint.x * 2, -(tileToPrint.y * 2), 0);
-                    newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x * 2, -(tileToPrint.y * 2)), map);
+                    newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y), map);
+                    tileToPrint.TileRef = newTile.GetComponent<TileScript>();
+
 
                     // if (!tileToPrint.canRecieveTower)
                     // {

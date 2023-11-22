@@ -18,6 +18,9 @@ public class Enemy : MonoBehaviour
 
     public void Spawn(){
         transform.position = Graph.Entry.transform.position;
+
+        Graph graph = GameObject.Find("Graph").GetComponent<Graph>();
+        SetPath(graph.BestPath);
     }
 
     private void Move(){
@@ -25,7 +28,7 @@ public class Enemy : MonoBehaviour
 
         if(transform.position == destination){
             if(path != null && path.Count > 0){
-                //GridPosition = path[0].GridPosition;
+                GridPosition = path[0].GridPosition;
                 destination = path[0].WorldPosition;
                 path[0] = null;
                 path = ReorganizeList();
@@ -44,5 +47,16 @@ public class Enemy : MonoBehaviour
 
         return tmp;
 
+    }
+
+    private void SetPath(List<Node> newPath){
+        if(newPath != null){
+            this.path = newPath;
+
+            GridPosition = path[0].GridPosition;
+            destination = path[0].WorldPosition;
+            path[0] = null;
+            path = ReorganizeList();
+        }
     }
 }
