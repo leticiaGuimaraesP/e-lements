@@ -49,4 +49,8 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public bool IsActive(){
+        return true;
+    }
 }

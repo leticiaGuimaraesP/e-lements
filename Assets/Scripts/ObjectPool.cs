@@ -17,4 +17,8 @@ public class ObjectPool : MonoBehaviour
 
         return null;
     }
+
+    public void ReleaseObject(GameObject gameObject){
+        gameObject.SetActive(false);
+    }
 }
