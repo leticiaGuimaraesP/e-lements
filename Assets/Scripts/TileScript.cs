@@ -50,7 +50,7 @@ public class TileScript : MonoBehaviour
             if (myTower != null) {
                 GameManager.Instance.SelectTower(myTower);
             } else {
-
+                GameManager.Instance.DeselectTower();
             }
         }
 
