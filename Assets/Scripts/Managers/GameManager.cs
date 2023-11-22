@@ -10,19 +10,26 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private Text currencyTxt;
 
+    //the current selected tower
+    private Towers selectedTower;
+
     public ObjectPool Pool { get; set; }
 
-    public int Currency{
-        get{
+    public int Currency
+    {
+        get
+        {
             return currency;
         }
-        set{
+        set
+        {
             this.currency = value;
             this.currencyTxt.text = value.ToString() + " <color=lime>$</color>";
         }
     }
 
-    private void Awake(){
+    private void Awake()
+    {
         Pool = GetComponent<ObjectPool>();
     }
 
@@ -38,37 +45,64 @@ public class GameManager : Singleton<GameManager>
         HandleEscape();
     }
 
-    public void PickTower(TowerBtn towerBtn){
-        if(Currency >= towerBtn.Price){
+    public void PickTower(TowerBtn towerBtn)
+    {
+        if (Currency >= towerBtn.Price)
+        {
             this.ClickedBtn = towerBtn;
             Hover.Instance.Activate(towerBtn.Sprite);
         }
     }
 
-    public void BuyTower(){
-        if(Currency >= ClickedBtn.Price){
+    public void BuyTower()
+    {
+        if (Currency >= ClickedBtn.Price)
+        {
             Currency -= ClickedBtn.Price;
 
             Hover.Instance.Deactivate();
         }
     }
 
-    private void HandleEscape(){
-        if(Input.GetKeyDown(KeyCode.Escape)){
+    public void SelectTower(Towers tower)
+    {
+        if(selectedTower!= null){
+            selectedTower.Select();
+        }
+        selectedTower = tower;
+        selectedTower.Select();
+    }
+
+    public void DeselectTower()
+    {
+        if (selectedTower != null)
+        {
+            selectedTower.Select();
+        }
+        selectedTower = null;
+    }
+
+    private void HandleEscape()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
             Hover.Instance.Deactivate();
         }
     }
 
-    public void StartWave(){
+    public void StartWave()
+    {
         StartCoroutine(SpawnWave());
     }
 
-    private IEnumerator SpawnWave(){
-        int enemyIndex = Random.Range(0, 3); 
+    private IEnumerator SpawnWave()
+    {
+        int enemyIndex = Random.Range(0, 3);
 
         string type = string.Empty;
 
-        switch(enemyIndex){
+        switch (enemyIndex)
+        {
             case 0:
                 type = "enemy1";
                 break;
