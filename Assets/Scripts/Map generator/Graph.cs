@@ -156,30 +156,29 @@ public class Graph : MonoBehaviour
                     newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y), map);
                     tileToPrint.TileRef = newTile.GetComponent<TileScript>();
 
+                    if (!tileToPrint.canRecieveTower)
+                    {
+                         int x = Random.Range(0, 10);
+                         if (x % 2 == 0)
+                         {
+                            Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                         }
+                         else if (x % 3 == 0)
+                         {
+                             Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                         }
+                         else if (x % 5 == 0 || x % 7 == 0)
+                         {
+                           GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
+                           // float treeZPosition = 1.5f; // Defina a posição Z desejada para a árvore
+                           //newTree.transform.position = new Vector3(newTree.transform.position.x, newTree.transform.position.y, treeZPosition);
 
-                    // if (!tileToPrint.canRecieveTower)
-                    // {
-                    //      int x = Random.Range(0, 10);
-                    //      if (x % 2 == 0)
-                    //      {
-                    //         Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                    //      }
-                    //      else if (x % 3 == 0)
-                    //      {
-                    //          Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                    //      }
-                    //      else if (x % 5 == 0 || x % 7 == 0)
-                    //      {
-                    //        GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
-                    //        // float treeZPosition = 1.5f; // Defina a posição Z desejada para a árvore
-                    //        //newTree.transform.position = new Vector3(newTree.transform.position.x, newTree.transform.position.y, treeZPosition);
-
-                    //      }
-                    //      else
-                    //     {
-                    //          Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                    //      }
-                    // }
+                         }
+                         else
+                        {
+                             Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                         }
+                    }
 
                 }
 

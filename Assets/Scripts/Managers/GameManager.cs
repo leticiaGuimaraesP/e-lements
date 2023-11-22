@@ -64,7 +64,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     private IEnumerator SpawnWave(){
-        int enemyIndex = Random.Range(0, 3);
+        int enemyIndex = Random.Range(0, 3); 
 
         string type = string.Empty;
 

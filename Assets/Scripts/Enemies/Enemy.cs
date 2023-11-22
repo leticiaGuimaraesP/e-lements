@@ -6,57 +6,47 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private float speed;
 
-    private List<Node> path;
+    private int path_size = 0;
 
-    public Point GridPosition { get; set; }
+    private int pathIndex;
 
-    private  Vector3 destination;
+    private Transform[] path;
 
-    private void Update(){
-        Move();
-    }
+    private List<List<Transform>> pathTransform;
 
-    public void Spawn(){
+    private Animator anim;
+
+    public void Spawn()
+    {
         transform.position = Graph.Entry.transform.position;
 
         Graph graph = GameObject.Find("Graph").GetComponent<Graph>();
-        SetPath(graph.BestPath);
-    }
+        if (graph != null){
+            pathTransform = graph.path_transform;
 
-    private void Move(){
-        transform.position = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+            path_size = pathTransform[0].Count;
 
-        if(transform.position == destination){
-            if(path != null && path.Count > 0){
-                GridPosition = path[0].GridPosition;
-                destination = path[0].WorldPosition;
-                path[0] = null;
-                path = ReorganizeList();
+            path = new Transform[path_size];
+
+            for (int i = 0; i < path_size - 1; i++){
+                path[i] = pathTransform[0][i];
             }
         }
     }
 
-    public List<Node> ReorganizeList(){
-        List<Node> tmp = new List<Node>();
+    // Update is called once per frame
+    void Update()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, path[pathIndex].position, speed * Time.deltaTime);
 
-        foreach(Node n in path){
-            if(n != null){
-                tmp.Add(n);
-            }
+        if (Vector2.Distance(transform.position, path[pathIndex].position) < 0.1f)
+        {
+            pathIndex++;
         }
 
-        return tmp;
-
-    }
-
-    private void SetPath(List<Node> newPath){
-        if(newPath != null){
-            this.path = newPath;
-
-            GridPosition = path[0].GridPosition;
-            destination = path[0].WorldPosition;
-            path[0] = null;
-            path = ReorganizeList();
+        if (pathIndex == path_size - 1)
+        {
+            Destroy(gameObject);
         }
     }
 }
