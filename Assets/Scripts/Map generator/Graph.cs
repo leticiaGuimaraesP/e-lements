@@ -28,9 +28,12 @@ public class Graph : MonoBehaviour
     private List<Node> requiredVertices = new List<Node>();
     private List<Node> bestPath;
 
-    public List<Node> BestPath{
-        get{
-            if(bestPath == null){
+    public List<Node> BestPath
+    {
+        get
+        {
+            if (bestPath == null)
+            {
                 bestPath = FindBestPath(source1, destination1, destination2);
                 printPath(bestPath);
             }
@@ -156,28 +159,25 @@ public class Graph : MonoBehaviour
                     newTile.GetComponent<TileScript>().Setup(new Point(tileToPrint.x, tileToPrint.y), map);
                     tileToPrint.TileRef = newTile.GetComponent<TileScript>();
 
-                    if (!tileToPrint.canRecieveTower)
+                    if (!tileToPrint.canRecieveTower && VerifyNeighboor(tileToPrint))
                     {
-                        //  int x = Random.Range(0, 10);
-                        //  if (x % 2 == 0)
-                        //  {
-                        //     Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                        //  }
-                        //  else if (x % 3 == 0)
-                        //  {
-                        //      Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                        //  }
-                        //  else if (x % 5 == 0 || x % 7 == 0)
-                        //  {
-                        //    GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
-                        //    // float treeZPosition = 1.5f; // Defina a posição Z desejada para a árvore
-                        //    //newTree.transform.position = new Vector3(newTree.transform.position.x, newTree.transform.position.y, treeZPosition);
-
-                        //  }
-                        //  else
-                        // {
-                        //      Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
-                        //  }
+                        int x = Random.Range(0, 10);
+                        if (x % 2 == 0)
+                        {
+                            Instantiate(flower, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                        }
+                        else if (x % 3 == 0)
+                        {
+                            Instantiate(grass, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                        }
+                        else if (x % 5 == 0 || x % 7 == 0)
+                        {
+                            GameObject newTree = Instantiate(tree, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2)), Quaternion.identity);
+                        }
+                        else
+                        {
+                            Instantiate(grass2, new Vector2(tileToPrint.x * 2, -(tileToPrint.y * 2) + (float)0.1), Quaternion.identity);
+                        }
                     }
 
                 }
@@ -187,6 +187,15 @@ public class Graph : MonoBehaviour
 
 
             tileToPrint = firstPosition.bottom;
+        }
+    }
+
+    public bool VerifyNeighboor(Node n){
+        if((n.top && !n.top.isPath) && (n.right && !n.right.isPath) && (n.bottom && !n.bottom.isPath) && (n.left && !n.left.isPath)){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
@@ -407,19 +416,20 @@ public class Graph : MonoBehaviour
         return bestPath;
     }
 
-    public void RecalculateDistance(double x, double y){
+    public void RecalculateDistance(double x, double y)
+    {
         //Debug.Log("teste");
         y *= -1;
-        y = y/2;
-        x = x/2;
+        y = y / 2;
+        x = x / 2;
 
         // Debug.Log("x: " + x + ", y: " + y);
 
         //Atualizar o valor da distancia -> (x+1, y) (x-1, y) (x, y+1) (x, y-1)
-        Node node1 = getNodeAtPosition(x-1, y, matrix);
-        Node node2 = getNodeAtPosition(x+1, y, matrix);
-        Node node3 = getNodeAtPosition(x, y-1, matrix);
-        Node node4 = getNodeAtPosition(x, y+1, matrix);
+        Node node1 = getNodeAtPosition(x - 1, y, matrix);
+        Node node2 = getNodeAtPosition(x + 1, y, matrix);
+        Node node3 = getNodeAtPosition(x, y - 1, matrix);
+        Node node4 = getNodeAtPosition(x, y + 1, matrix);
 
         // Debug.Log("node1 x: " + node1.x + ", node1 y: " + node1.y);
         // Debug.Log("node2 x: " + node2.x + ", node2 y: " + node2.y);
@@ -497,7 +507,8 @@ public class Graph : MonoBehaviour
             dist = a.parent.distEntry + 1; // Toda aresta possui custo 1
         }
 
-        if (a.tower){ //se possuir torre, aumenta a distancia
+        if (a.tower)
+        { //se possuir torre, aumenta a distancia
             dist += 100;
         }
 
@@ -520,35 +531,44 @@ public class Graph : MonoBehaviour
         return path;
     }
 
-     public Node getNodeAtPosition(double x, double y, MatrixGraph matrix) {
-         Node currentNode = matrix.head;
+    public Node getNodeAtPosition(double x, double y, MatrixGraph matrix)
+    {
+        Node currentNode = matrix.head;
 
-         // Desloca-se verticalmente para a posição Y
-         for (double i = 0; i <= y; i++) {
-             if (currentNode.bottom != null) {
-                 currentNode = currentNode.bottom;
-             } else {
-                 // Tratamento para evitar null pointer caso a posição não exista
+        // Desloca-se verticalmente para a posição Y
+        for (double i = 0; i <= y; i++)
+        {
+            if (currentNode.bottom != null)
+            {
+                currentNode = currentNode.bottom;
+            }
+            else
+            {
+                // Tratamento para evitar null pointer caso a posição não exista
                 Debug.LogError("O objeto transform é nulo. Verifique se o objeto está atribuído corretamente.");
-             }
-         }
+            }
+        }
 
 
-         // Desloca-se horizontalmente para a posição X
-         for (double i = 0; i < x; i++) {
-             if (currentNode.right != null) {
-                 currentNode = currentNode.right;
-             } else {
-                 // Tratamento para evitar null pointer caso a posição não exista
+        // Desloca-se horizontalmente para a posição X
+        for (double i = 0; i < x; i++)
+        {
+            if (currentNode.right != null)
+            {
+                currentNode = currentNode.right;
+            }
+            else
+            {
+                // Tratamento para evitar null pointer caso a posição não exista
                 Debug.LogError("O objeto transform é nulo. Verifique se o objeto está atribuído corretamente.");
-             }
-         }
-         
+            }
+        }
+
 
         //  Debug.Log(currentNode.x);
         //  Debug.Log(currentNode.y);
 
-         return currentNode;
+        return currentNode;
     }
 
 

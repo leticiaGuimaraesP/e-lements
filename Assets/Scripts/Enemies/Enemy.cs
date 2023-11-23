@@ -98,5 +98,8 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(1f);
         GameManager.Instance.Pool.ReleaseObject(gameObject);
         anim.ResetTrigger("dead");
+
+        GameManager.Instance.RemoveEnemy(this);
+        GameManager.Instance.UpdateCurrency(this);
     }
 }

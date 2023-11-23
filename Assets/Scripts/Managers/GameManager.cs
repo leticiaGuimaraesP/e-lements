@@ -121,8 +121,6 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator SpawnWave()
     {
-        //RECALCULATE PATH WITH A*
-
         GameObject graphObject = GameObject.Find("Graph");
         graph = graphObject.GetComponent<Graph>();
 
@@ -165,6 +163,18 @@ public class GameManager : Singleton<GameManager>
         if (!WaveActive)
         {
             waveBtn.SetActive(true);
+        }
+    }
+
+    public void UpdateCurrency(Enemy enemy){
+        if(enemy.name == "enemy1"){
+            Currency += 2;
+        }
+        else if(enemy.name == "enemy2"){
+            Currency += 3;
+        }
+        else{
+            Currency += 5;
         }
     }
 }
