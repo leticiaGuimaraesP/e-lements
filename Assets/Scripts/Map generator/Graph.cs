@@ -23,7 +23,7 @@ public class Graph : MonoBehaviour
 
     private List<Node> Q1, Q2, Q3, Q4;
 
-    private Node source1, source2, destination1, destination2;
+    public Node source1, source2, destination1, destination2;
 
     private List<Node> requiredVertices = new List<Node>();
     private List<Node> bestPath;
@@ -352,7 +352,7 @@ public class Graph : MonoBehaviour
         entry.funcN = CalculateFunction(entry);
 
 
-        while (openSet.Count > 0) //Não sei se esse teste está correto
+        while (openSet.Count > 0)
         {
             Node current = openSet[0];
 
@@ -364,6 +364,8 @@ public class Graph : MonoBehaviour
                     current = openSet[i];
                 }
             }
+
+            Debug.Log("Dist entry:" + current.distEntry);
 
             openSet.Remove(current);
             closedSet.Add(current);
@@ -384,7 +386,7 @@ public class Graph : MonoBehaviour
                 { //Valida se o vizinho faz parte de algum caminho
                     int tentativeDist = current.distEntry + 1; // Custo de movimento é assumido como 1
 
-                    // Se o vizinho não está no conjunto aberto ou tem um custo menor do que calculado anterriormente
+                    // Se o vizinho não está no conjunto aberto ou tem um custo menor do que calculado anteriormente
                     if (!openSet.Contains(neighbor) || tentativeDist < neighbor.distEntry)
                     {
                         //atualiza os dados
@@ -403,6 +405,36 @@ public class Graph : MonoBehaviour
             }
         }
         return bestPath;
+    }
+
+    public void Teste(double x, double y){
+        Debug.Log("teste");
+        y *= -1;
+        y = y/2;
+        x = x/2;
+
+        // Debug.Log("x: " + x + ", y: " + y);
+
+        //Atualizar o valor da distancia -> (x+1, y) (x-1, y) (x, y+1) (x, y-1)
+        Node node1 = getNodeAtPosition(x-1, y, matrix);
+        Node node2 = getNodeAtPosition(x+1, y, matrix);
+        Node node3 = getNodeAtPosition(x, y-1, matrix);
+        Node node4 = getNodeAtPosition(x, y+1, matrix);
+
+        // Debug.Log("node1 x: " + node1.x + ", node1 y: " + node1.y);
+        // Debug.Log("node2 x: " + node2.x + ", node2 y: " + node2.y);
+        // Debug.Log("node3 x: " + node3.x + ", node3 y: " + node3.y);
+        // Debug.Log("node4 x: " + node4.x + ", node4 y: " + node4.y);
+
+        node1.tower = true;
+        node2.tower = true;
+        node3.tower = true;
+        node4.tower = true;
+
+        CalculateDist(node1);
+        CalculateDist(node2);
+        CalculateDist(node3);
+        CalculateDist(node4);
     }
 
 
@@ -464,6 +496,11 @@ public class Graph : MonoBehaviour
         {
             dist = a.parent.distEntry + 1; // Toda aresta possui custo 1
         }
+
+        if (a.tower){ //se possuir torre, aumenta a distancia
+            dist += 100;
+        }
+
         return dist;
     }
 
@@ -484,132 +521,37 @@ public class Graph : MonoBehaviour
         return path;
     }
 
+     public Node getNodeAtPosition(double x, double y, MatrixGraph matrix) {
+         Node currentNode = matrix.head;
+
+         // Desloca-se verticalmente para a posição Y
+         for (double i = 0; i <= y; i++) {
+             if (currentNode.bottom != null) {
+                 currentNode = currentNode.bottom;
+             } else {
+                 // Tratamento para evitar null pointer caso a posição não exista
+                Debug.LogError("O objeto transform é nulo. Verifique se o objeto está atribuído corretamente.");
+             }
+         }
+
+
+         // Desloca-se horizontalmente para a posição X
+         for (double i = 0; i < x; i++) {
+             if (currentNode.right != null) {
+                 currentNode = currentNode.right;
+             } else {
+                 // Tratamento para evitar null pointer caso a posição não exista
+                Debug.LogError("O objeto transform é nulo. Verifique se o objeto está atribuído corretamente.");
+             }
+         }
+         
+
+        //  Debug.Log(currentNode.x);
+        //  Debug.Log(currentNode.y);
+
+         return currentNode;
+    }
+
+
 }
 
-
-class MatrixGraph
-{
-    private int radius;
-    public int n;
-    private int x;
-    public Node head;
-
-
-    public MatrixGraph(int radius)
-    {
-        this.radius = radius;
-
-        this.n = (int)radius / 2;
-        this.x = (int)n * n;
-
-        //head = head Node 
-        head = new Node();
-        head.bottom = new Node(0, 0);
-
-        Node columnCurrent = head.bottom, lineCurrent;
-
-        // First line 
-        for (int i = 0; i < radius - 1; i++)
-        {
-            columnCurrent.right = new Node(i + 1, 0);
-            columnCurrent.right.left = columnCurrent;
-            columnCurrent = columnCurrent.right;
-        }
-
-        for (int i = 1; i < radius; i++)
-        {
-            while (columnCurrent.left != null)
-            {
-                columnCurrent = columnCurrent.left;
-            }
-
-            // next line
-            columnCurrent.bottom = new Node(0, i);
-            lineCurrent = columnCurrent.bottom;
-            lineCurrent.top = columnCurrent;
-
-            // building line`s column
-            for (int j = 0; j < radius - 1; j++)
-            {
-                lineCurrent.right = new Node(j + 1, i);
-                lineCurrent.right.left = lineCurrent;
-
-                lineCurrent = lineCurrent.right;
-                columnCurrent = columnCurrent.right;
-
-                lineCurrent.top = columnCurrent;
-                columnCurrent.bottom = lineCurrent;
-            }
-
-            // point to last node in line
-            columnCurrent = lineCurrent;
-        }
-
-    }
-
-    public Node getQuadrantStart(int q)
-    {
-        Node ret = head.bottom;
-        if (q == 1)
-        {
-            return ret;
-        }
-        else if (q == 2)
-        {
-            while (ret.x != n)
-            {
-                ret = ret.right;
-            }
-            return ret;
-        }
-        else if (q == 3)
-        {
-            while (ret.y != (n))
-            {
-                ret = ret.bottom;
-            }
-            return ret;
-        }
-        else if (q == 4)
-        {
-            while (ret.x != n)
-            {
-                ret = ret.right;
-            }
-            while (ret.y != (n))
-            {
-                ret = ret.bottom;
-            }
-            return ret;
-        }
-
-        return null;
-
-    }
-
-    public List<Node> getQuadrant(int q)
-    {
-        List<Node> list = new List<Node>();
-        Node curr = getQuadrantStart(q);
-        Node first = curr;
-
-        int count = 0;
-        if (curr != null)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    list.Add(curr);
-                    curr = curr.right;
-                }
-                curr = first.bottom;
-                first = curr;
-
-            }
-        }
-
-        return list;
-    }
-
-}

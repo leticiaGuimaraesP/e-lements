@@ -15,6 +15,9 @@ public class GameManager : Singleton<GameManager>
 
     public ObjectPool Pool { get; set; }
 
+    private Graph graph;
+    private List<Node> bestPath;
+
     public int Currency
     {
         get
@@ -92,6 +95,14 @@ public class GameManager : Singleton<GameManager>
 
     public void StartWave()
     {
+        GameObject graphObject = GameObject.Find("Graph");
+        graph = graphObject.GetComponent<Graph>();
+
+        graph.path_transform.Clear();
+        bestPath = graph.FindBestPath(graph.source1, graph.destination1, graph.destination2);
+        Debug.Log("start");
+        graph.printPath(bestPath);
+
         StartCoroutine(SpawnWave());
     }
 
