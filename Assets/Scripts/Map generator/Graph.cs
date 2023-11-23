@@ -365,7 +365,7 @@ public class Graph : MonoBehaviour
                 }
             }
 
-            Debug.Log("Dist entry:" + current.distEntry);
+            //Debug.Log("Dist entry:" + current.distEntry);
 
             openSet.Remove(current);
             closedSet.Add(current);
@@ -391,7 +391,7 @@ public class Graph : MonoBehaviour
                     {
                         //atualiza os dados
                         neighbor.parent = current;
-                        neighbor.distEntry = tentativeDist;
+                        neighbor.distEntry = CalculateDist(neighbor);
                         neighbor.heuristic = CalculateHeuristic(neighbor, destiny1, destiny2);
                         neighbor.funcN = CalculateFunction(neighbor);
 
@@ -407,8 +407,8 @@ public class Graph : MonoBehaviour
         return bestPath;
     }
 
-    public void Teste(double x, double y){
-        Debug.Log("teste");
+    public void RecalculateDistance(double x, double y){
+        //Debug.Log("teste");
         y *= -1;
         y = y/2;
         x = x/2;
@@ -554,4 +554,3 @@ public class Graph : MonoBehaviour
 
 
 }
-

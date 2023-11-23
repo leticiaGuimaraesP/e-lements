@@ -96,7 +96,7 @@ public class TileScript : MonoBehaviour
         GameObject graphObject = GameObject.Find("Graph");
         graph = graphObject.GetComponent<Graph>();
 
-        graph.Teste(transform.position.x, transform.position.y);
+        graph.RecalculateDistance(transform.position.x, transform.position.y);
 
         IsEmpty = false;
 

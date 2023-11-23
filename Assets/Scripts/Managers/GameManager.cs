@@ -100,7 +100,7 @@ public class GameManager : Singleton<GameManager>
 
         graph.path_transform.Clear();
         bestPath = graph.FindBestPath(graph.source1, graph.destination1, graph.destination2);
-        Debug.Log("start");
+        // Debug.Log("start");
         graph.printPath(bestPath);
 
         StartCoroutine(SpawnWave());
