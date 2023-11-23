@@ -161,6 +161,7 @@ public class Graph : MonoBehaviour
 
                     if (!tileToPrint.canRecieveTower && VerifyNeighboor(tileToPrint))
                     {
+                        newTile.GetComponent<TileScript>().IsEmpty = false;
                         int x = Random.Range(0, 10);
                         if (x % 2 == 0)
                         {
