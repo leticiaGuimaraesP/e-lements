@@ -10,10 +10,26 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private Text currencyTxt;
 
+    [SerializeField] private GameObject waveBtn;
+
+    private List<Enemy> activeEnemies = new List<Enemy>();
+
     //the current selected tower
     private Towers selectedTower;
 
     public ObjectPool Pool { get; set; }
+
+    public bool WaveActive
+    {
+        get
+        {
+            return activeEnemies.Count > 0;
+        }
+    }
+
+    private int wave = 0;
+
+    [SerializeField] private Text waveTxt;
 
     public int Currency
     {
@@ -47,7 +63,7 @@ public class GameManager : Singleton<GameManager>
 
     public void PickTower(TowerBtn towerBtn)
     {
-        if (Currency >= towerBtn.Price)
+        if (Currency >= towerBtn.Price && !WaveActive)
         {
             this.ClickedBtn = towerBtn;
             Hover.Instance.Activate(towerBtn.Sprite);
@@ -66,7 +82,8 @@ public class GameManager : Singleton<GameManager>
 
     public void SelectTower(Towers tower)
     {
-        if(selectedTower!= null){
+        if (selectedTower != null)
+        {
             selectedTower.Select();
         }
         selectedTower = tower;
@@ -92,31 +109,53 @@ public class GameManager : Singleton<GameManager>
 
     public void StartWave()
     {
+        wave++;
+        waveTxt.text = string.Format("Wave: <color=lime>{0}</color>", wave);
+
         StartCoroutine(SpawnWave());
+
+        waveBtn.SetActive(false);
     }
 
     private IEnumerator SpawnWave()
     {
-        int enemyIndex = Random.Range(0, 3);
+        //RECALCULATE PATH WITH A*
 
-        string type = string.Empty;
-
-        switch (enemyIndex)
+        for (int i = 0; i < wave*3; i++)
         {
-            case 0:
-                type = "enemy1";
-                break;
-            case 1:
-                type = "enemy2";
-                break;
-            case 2:
-                type = "enemy3";
-                break;
+            int enemyIndex = Random.Range(0, 3);
+
+            string type = string.Empty;
+
+            switch (enemyIndex)
+            {
+                case 0:
+                    type = "enemy1";
+                    break;
+                case 1:
+                    type = "enemy2";
+                    break;
+                case 2:
+                    type = "enemy3";
+                    break;
+            }
+
+            Enemy enemy = Pool.GetObject(type).GetComponent<Enemy>();
+            enemy.Spawn();
+
+            activeEnemies.Add(enemy);
+
+            yield return new WaitForSeconds(2.5f);
         }
+    }
 
-        Enemy enemy = Pool.GetObject(type).GetComponent<Enemy>();
-        enemy.Spawn();
+    public void RemoveEnemy(Enemy enemy)
+    {
+        activeEnemies.Remove(enemy);
 
-        yield return new WaitForSeconds(2.5f);
+        if (!WaveActive)
+        {
+            waveBtn.SetActive(true);
+        }
     }
 }

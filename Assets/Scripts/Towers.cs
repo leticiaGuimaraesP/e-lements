@@ -39,7 +39,6 @@ public class Towers : MonoBehaviour
     void Update()
     {
         Attack();
-        if (target) Debug.Log(target);
     }
 
     public void Select()

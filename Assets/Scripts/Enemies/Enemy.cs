@@ -46,6 +46,7 @@ public class Enemy : MonoBehaviour
 
         if (pathIndex == path_size - 1)
         {
+            GameManager.Instance.RemoveEnemy(this);
             Destroy(gameObject);
         }
     }

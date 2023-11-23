@@ -62,9 +62,7 @@ public class TileScript : MonoBehaviour
                 PlaceTower();
             }
         }else if (!EventSystem.current.IsPointerOverGameObject() && GameManager.Instance.ClickedBtn == null && Input.GetMouseButtonDown(0)){
-            Debug.Log("heree");
             if(myTower!=null){
-                Debug.Log("here");
                 GameManager.Instance.SelectTower(myTower);
             }else{
                   GameManager.Instance.DeselectTower();

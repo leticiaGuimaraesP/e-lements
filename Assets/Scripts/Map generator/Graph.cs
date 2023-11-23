@@ -473,7 +473,6 @@ public class Graph : MonoBehaviour
         List<Node> path = new List<Node>();
         while (node != null)
         {
-            //Debug.Log("entrou");
             path.Add(node);
             node = node.parent;
         }
