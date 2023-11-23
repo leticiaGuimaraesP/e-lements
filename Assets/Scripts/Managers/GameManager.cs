@@ -145,7 +145,7 @@ public class GameManager : Singleton<GameManager>
 
             activeEnemies.Add(enemy);
 
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(2f);
         }
     }
 

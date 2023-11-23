@@ -11,6 +11,8 @@ public class Towers : MonoBehaviour
     {
         get { return projectileSpeed; }
     }
+
+    [SerializeField] private  int damage;
     private SpriteRenderer mySpriteRenderer;
 
     private Enemy target;
@@ -20,6 +22,8 @@ public class Towers : MonoBehaviour
             return target;
         }
     }
+
+    public int Damage { get => damage; }
 
     private Queue<Enemy> enemies = new Queue<Enemy>();
 

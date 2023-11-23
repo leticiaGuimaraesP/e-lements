@@ -5,27 +5,48 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
 
-  [SerializeField]
-  private Stat health;
+  // [SerializeField]
+  // private Stat health;
 
-  public BarScript healthBar;
+  // public BarScript healthBar;
 
-  private void Awake()
-  {
-    health.Initialize();
-  }
+  // private Animator anim;
 
-  void Start()
-  {
 
-  }
+  // private void Awake()
+  // {
+  //   health.Initialize();
+  // }
 
-  void Update()
-  {
-    if (Input.GetKeyDown(KeyCode.Q))
-    {
-      Debug.Log(health.CurrentValue);
-      health.CurrentValue -= 10;
-    }
-  }
+  // void Start()
+  // {
+  //   anim = this.GetComponent<Animator>();
+  // }
+
+  // void Update()
+  // {
+  //   if (health.CurrentValue <= 0)
+  //   {
+  //     Die();
+  //   }
+  // }
+
+  // public void Harm(int damage)
+  // {
+  //   if (gameObject.activeSelf)
+  //   {
+  //     health.CurrentValue -= damage;
+  //   }
+  // }
+
+  // private void Die()
+  // {
+  //   anim.SetTrigger("dead");
+  //   StartCoroutine(Dying());
+  // }
+
+  // private IEnumerator Dying(){
+  //   yield return new WaitForSeconds(1f);
+  //   GameManager.Instance.Pool.ReleaseObject(gameObject);
+  // }
 }

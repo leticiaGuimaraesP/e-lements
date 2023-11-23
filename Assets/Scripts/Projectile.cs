@@ -25,7 +25,7 @@ public class Projectile : MonoBehaviour
     }
 
     private void MoveToTarget(){
-        if(target!=null && target.IsActive()){
+        if(target!=null && target.gameObject.activeSelf){
 
             if(transform.position == target.transform.position){
                 Destroy(this);
@@ -38,8 +38,21 @@ public class Projectile : MonoBehaviour
 
             transform.rotation = Quaternion.AngleAxis(ang, Vector3.forward);
 
-        }else if(!target.IsActive()){
+        }else if(!target.gameObject.activeSelf){
             GameManager.Instance.Pool.ReleaseObject(gameObject);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.tag=="Enemy"){
+
+            if(target.gameObject == other.gameObject){
+                GameManager.Instance.Pool.ReleaseObject(gameObject);
+
+                other.GetComponent<Enemy>().Harm(parent.Damage);
+            }
+            
         }
     }
 }
