@@ -8,13 +8,21 @@ public class GameManager : Singleton<GameManager>
 
     private int currency;
 
+    private int lives;
+
     [SerializeField] private Text currencyTxt;
+    [SerializeField] private Text livesTxt;
 
     [SerializeField] private GameObject waveBtn;
 
-    [SerializeField] private  GameObject sellBtn;
+    [SerializeField] private GameObject sellBtn;
+
+    [SerializeField] public Image gameOver;
+    [SerializeField] public Image gameOverBack;
+    [SerializeField] public GameObject restartButton;
 
     [SerializeField]  private  Text sellText;
+    [SerializeField] public Text lifeText;
 
     private List<Enemy> activeEnemies = new List<Enemy>();
 
@@ -58,7 +66,14 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
+        lives = 10;
+        lifeText.text = string.Format("<color=red>{0}</color>", GameManager.Instance.getLifes());
         Currency = 20;
+        sellText.enabled = false;
+        gameOver.enabled = false;
+        gameOverBack.enabled = false;
+        restartButton.SetActive(false);
+        sellBtn.SetActive(false);
     }
 
     // Update is called once per frame
@@ -95,6 +110,7 @@ public class GameManager : Singleton<GameManager>
         selectedTower = tower;
         selectedTower.Select();
 
+        sellText.enabled = true;
         sellText.text = "+ " + (selectedTower.Price/2) + " $";
 
         sellBtn.SetActive(true);
@@ -108,7 +124,7 @@ public class GameManager : Singleton<GameManager>
         }
         selectedTower = null;
 
-
+        sellText.enabled = false;
         sellBtn.SetActive(false);
     }
 
@@ -124,6 +140,7 @@ public class GameManager : Singleton<GameManager>
     {
         wave++;
         waveTxt.text = string.Format("Wave: <color=lime>{0}</color>", wave);
+        lifeText.text = string.Format("<color=red>{0}</color>", lives);
 
         StartCoroutine(SpawnWave());
 
@@ -189,11 +206,27 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void removeLife(int quant) {
+        if (lives > 0) {
+            lives = lives - quant;
+        }
+    }
+
+    public void addLife(int quant) {
+        lives = lives + quant;
+    }
+
+    public int getLifes() {
+        return lives;
+    }
+
+
     public void SellTower(){
         if(selectedTower!=null){
             Currency += selectedTower.Price/2;
             selectedTower.GetComponentInParent<TileScript>().IsEmpty = true;
             Destroy(selectedTower.transform.parent.gameObject);
+            sellText.enabled = false;
             DeselectTower();
         }
     }

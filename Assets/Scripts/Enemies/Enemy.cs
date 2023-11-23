@@ -64,6 +64,13 @@ public class Enemy : MonoBehaviour
         {
             GameManager.Instance.RemoveEnemy(this);
             Destroy(gameObject);
+            GameManager.Instance.removeLife(1);
+            GameManager.Instance.lifeText.text = string.Format("<color=red>{0}</color>", GameManager.Instance.getLifes());
+            if (GameManager.Instance.getLifes() == 0) {
+                GameManager.Instance.gameOver.enabled = true;
+                GameManager.Instance.gameOverBack.enabled = true;
+                GameManager.Instance.restartButton.SetActive(true);
+            } 
         }
 
         if (health.CurrentValue <= 0)
