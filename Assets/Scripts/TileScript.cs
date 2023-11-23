@@ -26,6 +26,8 @@ public class TileScript : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    private Graph graph;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -86,6 +88,13 @@ public class TileScript : MonoBehaviour
         tower.transform.SetParent(transform);
 
         this.myTower = tower.transform.Find("Range").GetComponent<Towers>();
+
+        // Debug.Log(transform.position);
+
+        GameObject graphObject = GameObject.Find("Graph");
+        graph = graphObject.GetComponent<Graph>();
+
+        graph.RecalculateDistance(transform.position.x, transform.position.y);
 
         IsEmpty = false;
 

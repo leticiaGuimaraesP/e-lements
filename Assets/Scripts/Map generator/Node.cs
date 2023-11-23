@@ -33,6 +33,8 @@ public class Node : ScriptableObject
     public bool isPath = false;
     public bool Visited = false;
 
+    public bool tower = false; //testa se possui torre perto
+
     public bool isEntry = false;
 
     public bool isLast = false;

@@ -30,6 +30,8 @@ public class GameManager : Singleton<GameManager>
     private int wave = 0;
 
     [SerializeField] private Text waveTxt;
+    private Graph graph;
+    private List<Node> bestPath;
 
     public int Currency
     {
@@ -63,7 +65,7 @@ public class GameManager : Singleton<GameManager>
 
     public void PickTower(TowerBtn towerBtn)
     {
-        if (Currency >= towerBtn.Price && !WaveActive)
+        if (Currency >= towerBtn.Price)
         {
             this.ClickedBtn = towerBtn;
             Hover.Instance.Activate(towerBtn.Sprite);
@@ -120,6 +122,13 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator SpawnWave()
     {
         //RECALCULATE PATH WITH A*
+
+        GameObject graphObject = GameObject.Find("Graph");
+        graph = graphObject.GetComponent<Graph>();
+
+        graph.path_transform.Clear();
+        bestPath = graph.FindBestPath(graph.source1, graph.destination1, graph.destination2);
+        graph.printPath(bestPath);
 
         for (int i = 0; i < wave*3; i++)
         {
