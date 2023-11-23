@@ -23,7 +23,9 @@ public class Towers : MonoBehaviour
         }
     }
 
+
     public int Damage { get => damage; }
+    public int Price { get ; set ; }
 
     private Queue<Enemy> enemies = new Queue<Enemy>();
 

@@ -12,6 +12,10 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private GameObject waveBtn;
 
+    [SerializeField] private  GameObject sellBtn;
+
+    [SerializeField]  private  Text sellText;
+
     private List<Enemy> activeEnemies = new List<Enemy>();
 
     //the current selected tower
@@ -90,6 +94,10 @@ public class GameManager : Singleton<GameManager>
         }
         selectedTower = tower;
         selectedTower.Select();
+
+        sellText.text = "+ " + (selectedTower.Price/2) + " $";
+
+        sellBtn.SetActive(true);
     }
 
     public void DeselectTower()
@@ -99,6 +107,9 @@ public class GameManager : Singleton<GameManager>
             selectedTower.Select();
         }
         selectedTower = null;
+
+
+        sellBtn.SetActive(false);
     }
 
     private void HandleEscape()
@@ -175,6 +186,15 @@ public class GameManager : Singleton<GameManager>
         }
         else{
             Currency += 5;
+        }
+    }
+
+    public void SellTower(){
+        if(selectedTower!=null){
+            Currency += selectedTower.Price/2;
+            selectedTower.GetComponentInParent<TileScript>().IsEmpty = true;
+            Destroy(selectedTower.transform.parent.gameObject);
+            DeselectTower();
         }
     }
 }
