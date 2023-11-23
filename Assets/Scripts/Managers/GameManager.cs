@@ -111,7 +111,7 @@ public class GameManager : Singleton<GameManager>
         selectedTower.Select();
 
         sellText.enabled = true;
-        sellText.text = "+ " + (selectedTower.Price/2) + " $";
+        sellText.text = "+" + (selectedTower.Price/2);
 
         sellBtn.SetActive(true);
     }
@@ -139,7 +139,7 @@ public class GameManager : Singleton<GameManager>
     public void StartWave()
     {
         wave++;
-        waveTxt.text = string.Format("Wave: <color=lime>{0}</color>", wave);
+        waveTxt.text = string.Format("WAVE:<color=lime>{0}</color>", wave);
         lifeText.text = string.Format("<color=red>{0}</color>", lives);
 
         StartCoroutine(SpawnWave());
