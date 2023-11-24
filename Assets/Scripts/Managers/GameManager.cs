@@ -66,9 +66,9 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        lives = 10;
+        lives = 5;
         lifeText.text = string.Format("<color=red>{0}</color>", GameManager.Instance.getLifes());
-        Currency = 20;
+        Currency = 25;
         sellText.enabled = false;
         gameOver.enabled = false;
         gameOverBack.enabled = false;
@@ -111,7 +111,7 @@ public class GameManager : Singleton<GameManager>
         selectedTower.Select();
 
         sellText.enabled = true;
-        sellText.text = "+ " + (selectedTower.Price/2) + " $";
+        sellText.text = "+" + (selectedTower.Price/2);
 
         sellBtn.SetActive(true);
     }
@@ -139,7 +139,7 @@ public class GameManager : Singleton<GameManager>
     public void StartWave()
     {
         wave++;
-        waveTxt.text = string.Format("Wave: <color=lime>{0}</color>", wave);
+        waveTxt.text = string.Format("WAVE:<color=lime>{0}</color>", wave);
         lifeText.text = string.Format("<color=red>{0}</color>", lives);
 
         StartCoroutine(SpawnWave());
@@ -202,13 +202,13 @@ public class GameManager : Singleton<GameManager>
 
     public void UpdateCurrency(Enemy enemy){
         if(enemy.name == "enemy1"){
-            Currency += 2;
+            Currency += 1;
         }
         else if(enemy.name == "enemy2"){
-            Currency += 3;
+            Currency += 2;
         }
         else{
-            Currency += 5;
+            Currency += 3;
         }
     }
 

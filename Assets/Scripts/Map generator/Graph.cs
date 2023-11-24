@@ -80,6 +80,8 @@ public class Graph : MonoBehaviour
         List<Node> path2 = new List<Node>();
         List<Node> path3 = new List<Node>();
         List<Node> path4 = new List<Node>();
+        List<Node> path5 = new List<Node>();
+        List<Node> path6 = new List<Node>();
 
         //Busca do Q1
         path1.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[1]));
@@ -105,6 +107,16 @@ public class Graph : MonoBehaviour
         path1.AddRange(BreadthFirstPaths.BFS(requiredVertices[6], requiredVertices, destination2));
         path2.AddRange(BreadthFirstPaths.BFS(requiredVertices[7], requiredVertices, destination2));
 
+        path5.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[1]));
+        path6.AddRange(BreadthFirstPaths.BFS(source1, requiredVertices, requiredVertices[0]));
+
+        path5.AddRange(BreadthFirstPaths.BFS(requiredVertices[1], requiredVertices, requiredVertices[4]));
+        path6.AddRange(BreadthFirstPaths.BFS(requiredVertices[0], requiredVertices, requiredVertices[5]));
+
+        path5.AddRange(BreadthFirstPaths.BFS(requiredVertices[4], requiredVertices, destination1));
+        path6.AddRange(BreadthFirstPaths.BFS(requiredVertices[5], requiredVertices, destination2));
+
+
         printMap();
 
         //Encontra o melhor caminho (mais curto) da origem até o destino
@@ -115,6 +127,8 @@ public class Graph : MonoBehaviour
         printPath(path2);
         printPath(path3);
         printPath(path4);
+        printPath(path5);
+        printPath(path6);
     }
 
     public List<int> GenerateUniqueRandomNumbers(int min, int max, int count)
@@ -558,16 +572,14 @@ public class Graph : MonoBehaviour
             {
                 currentNode = currentNode.right;
             }
-            else
-            {
-                // Tratamento para evitar null pointer caso a posição não exista
-                Debug.LogError("O objeto transform é nulo. Verifique se o objeto está atribuído corretamente.");
-            }
+            // else
+            // {
+            //     // Tratamento para evitar null pointer caso a posição não exista
+            //     Debug.LogError("O objeto transform é nulo. Verifique se o objeto está atribuído corretamente.");
+            // }
         }
 
 
-        //  Debug.Log(currentNode.x);
-        //  Debug.Log(currentNode.y);
 
         return currentNode;
     }
