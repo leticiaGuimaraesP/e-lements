@@ -158,7 +158,13 @@ public class GameManager : Singleton<GameManager>
 
         for (int i = 0; i < wave*3; i++)
         {
-            int enemyIndex = Random.Range(0, 3);
+            int enemyIndex;
+
+            if(wave < 3) {
+                enemyIndex = Random.Range(0, 2);
+            } else {
+                enemyIndex = Random.Range(0, 3);
+            }
 
             string type = string.Empty;
 
