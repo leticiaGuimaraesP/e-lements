@@ -20,3 +20,16 @@ Sobre o jogo: Utilizando torres de cada elemento, os jogadores devem empregar es
 
 Estas implementações de grafos e do algoritmo A* foram fundamentais para a dinâmica e estratégia do nosso jogo de Tower Defense.
 
+### Funcionamento do Jogo
+
+Nesta demonstração, diferentes caminhos são gerados a cada início de partida. Enquanto isso, ondas de inimigos são geradas dinamicamente, desafiando o jogador a posicionar estrategicamente suas torres defensoras para proteger seu território. <br>
+<img src="https://github.com/leticiaGuimaraesP/e-lements/blob/main/image1.png" width="400" height="400">
+
+Torres sendo compradas e posicionadas. <br>
+<img src="https://github.com/leticiaGuimaraesP/e-lements/blob/main/image4.png" width="400" height="400">
+
+Os inimigos adotando uma abordagem inteligente ao escolher o caminho com menos torres defensoras para alcançar o seu destino. <br>
+<img src="https://github.com/leticiaGuimaraesP/e-lements/blob/main/image.png" width="400" height="400"> 
+
+Fim de jogo! <br>
+<img src="https://github.com/leticiaGuimaraesP/e-lements/blob/main/image2.png" width="400" height="400">
